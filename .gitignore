@@ -21,4 +21,11 @@ custom-output/
 .stylelintcache
 
 # IDE/Editor files
-.claude
+.claude/
+
+# Log files
+*.log
+
+# Backup files
+*.md~
+*.js~

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2025-01-09
+
+### Fixed
+- Fixed missing `templates/` directory in NPM package that caused "Cannot find module" error
+- Updated `.npmignore` to properly exclude only development files
+- Removed unused `test-icons/` directory
+
+## [0.1.0] - 2025-01-09
+
 ### Added
 - Initial release of svgs-to-icons
 - Support for generating both embedded (data URI) and referenced (file path) CSS versions

@@ -15,8 +15,9 @@ test('CLI smoke test - help flag', () => {
 });
 
 test('CLI smoke test - version flag', () => {
+  const packageJson = require('../package.json');
   const result = execSync(`node "${CLI_PATH}" --version`, { encoding: 'utf8' });
-  assert(result.includes('0.1.0'));
+  assert(result.includes(packageJson.version));
 });
 
 test('CLI smoke test - missing input directory', () => {

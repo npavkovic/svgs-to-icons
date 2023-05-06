@@ -1,0 +1,43 @@
+{
+  "name": "svgs-to-icons",
+  "version": "0.1.0",
+  "description": "Convert SVG files to CSS classes with mask properties",
+  "main": "svgs-to-icons.js",
+  "bin": {
+    "svgs-to-icons": "./svgs-to-icons.js"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "svg",
+    "css",
+    "icons",
+    "mask",
+    "cli",
+    "icon-system",
+    "css-masks",
+    "svg-optimization",
+    "frontend",
+    "build-tool",
+    "web-development"
+  ],
+  "author": "Nicholas Pavkovic",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/npavkovic/svgs-to-icons.git"
+  },
+  "homepage": "https://github.com/npavkovic/svgs-to-icons#readme",
+  "bugs": {
+    "url": "https://github.com/npavkovic/svgs-to-icons/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "mini-svg-data-uri": "^1.4.4",
+    "svgo": "^3.0.2"
+  }
+}

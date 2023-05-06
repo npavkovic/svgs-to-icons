@@ -1,0 +1,16 @@
+{
+  "name": "csssvg-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "svgtocss": "node svgtocss",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mini-svg-data-uri": "^1.4.4",
+    "svgo": "^3.0.2"
+  }
+}

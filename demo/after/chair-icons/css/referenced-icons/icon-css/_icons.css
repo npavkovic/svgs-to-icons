@@ -1,0 +1,20 @@
+/* Base styles for all icons - include this first */
+[class*="-icon"] {
+	mask-size: 100% 100%;
+	background-color: currentColor;
+	mask-repeat: no-repeat;
+	mask-position: center;
+	height: 1em;
+	width: 1em;
+	display: inline-block;
+}
+
+.bx-chair-icon { mask-image: url("../../bx-chair.svg"); }
+.fa6-solid-chair-icon { mask-image: url("../../fa6-solid-chair.svg"); }
+.hugeicons-chair-01-icon { mask-image: url("../../hugeicons-chair-01.svg"); }
+.hugeicons-chair-04-icon { mask-image: url("../../hugeicons-chair-04.svg"); }
+.hugeicons-chair-05-icon { mask-image: url("../../hugeicons-chair-05.svg"); }
+.hugeicons-chair-barber-icon { mask-image: url("../../hugeicons-chair-barber.svg"); }
+.hugeicons-office-chair-icon { mask-image: url("../../hugeicons-office-chair.svg"); }
+.ic-outline-chair-alt-icon { mask-image: url("../../ic-outline-chair-alt.svg"); }
+.ic-round-chair-icon { mask-image: url("../../ic-round-chair.svg"); }

@@ -1,32 +1,50 @@
 // Import color system from separate module
-const colors = require('./colors');
+const colors = require("./colors");
 
-function generateDemo({ title, icons, embedded, iconStyles }) {
-	const demoType = embedded ? 'Embedded Icons' : 'Referenced Icons';
-	const description = embedded 
-		? 'Icons with embedded SVG data (self-contained, no external files needed)'
-		: 'Icons that reference external SVG files (smaller CSS, requires SVG files)';
+function generateDemo({ title, embedded, iconBuild, sourceDirectory }) {
+
+	const demoType = embedded ? "Embedded Icons" : "Referenced Icons";
+
+	const description = embedded
+		? `${iconBuild.processedIcons.length} icons generated with embedded SVG data. These are self-contained; only the CSS file is needed.<br>Source: ${sourceDirectory}<br>Output: ${iconBuild.directories.embeddedIcons}`
+		: `${iconBuild.processedIcons.length} Icons generated with references to external SVG files. You’ll need both the CSS and the folder of SVG files to use these icons.<br>Source: ${sourceDirectory}<br>Output: ${iconBuild.directories.referencedIcons}`;
 
 	// Generate color options for select elements
-	const colorOptions = Object.keys(colors).map(colorKey => {
-		const color = colors[colorKey];
-		return `<option value="${color.value}" data-name="${colorKey}">${color.name}</option>`;
-	}).join('');
+	const colorOptions = Object.keys(colors)
+		.map((colorKey) => {
+			const color = colors[colorKey];
+			// "Black" and "Transparent" have been inserted in the HTML already
+			if (color.name !== "Transparent" && color.name !== "Black")
+				return `<option value="${color.value}" data-name="${colorKey}">${color.name}</option>`;
+		})
+		.join("");
 
-	// Generate icon grid items
-	const iconItems = icons.map(icon => `
-		<div class="icon-item" data-name="${icon.displayName.toLowerCase()}" data-class="${icon.className}">
+	// Generate icon grid 
+	const iconItems = iconBuild.processedIcons
+		.map(
+			(icon) => `
+		<div class="icon-item" data-name="${icon.displayName.toLowerCase()}" data-class="${
+				icon.className
+			}">
 			<div class="icon-wrapper">
 				<div class="${icon.className}"></div>
 			</div>
 			<div class="icon-info">
 				<p class="icon-name">${icon.displayName}</p>
-				<p class="icon-class">${icon.className}<button class="copy-btn" data-copy='&lt;span class=&quot;${icon.className}&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=\"${icon.className}"&gt;&lt;/span&gt;">
+				<button class="icon-class" data-copy='&lt;span class=&quot;${
+				icon.className
+			}&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=\"${
+				icon.className
+			}"&gt;&lt;/span&gt;">${
+					icon.className
+				}
 				</button>
 </p>
 			</div>
 		</div>
-	`).join('');
+	`
+		)
+		.join("");
 
 	return `<!DOCTYPE html>
 <html lang="en">
@@ -43,8 +61,6 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 			--background-padding: 12px;
 			--background-radius: 8px;
 			--standard-outline: #d1d1d1;
-			--surface: #E0E0E0;
-			--on-surface: #AAA;
 			--primary: #444;
 		}
 
@@ -56,11 +72,18 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 
 		body {
 			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-			background: var(--surface);
-			color: var(--on-surface);
+			background: hsl(0, 0%, 99%);
+			color: #444;
 			line-height: 1.6;
 			padding: 24px;
 			min-height: 100vh;
+			text-wrap: pretty;
+		}
+
+		a {
+			color: inherit;
+			text-underline-offset: 5px;
+			text-decoration-color: #666;
 		}
 
 		.container {
@@ -70,23 +93,25 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 
 		h1 {
 			font-size: 2.5rem;
-			font-weight: 600;
 			text-align: center;
 			margin-bottom: 8px;
 			color: var(--primary);
 		}
 
-		.subtitle {
+		.subtitle, .subtitle-file-protocol  {
 			text-align: center;
-			color: var(--on-surface);
 			opacity: 0.7;
-			margin-bottom: 32px;
-			font-size: 1.1rem;
+			font-size: 1rem;
+			max-width: 725px;
+			margin: 0 auto 54px auto;
 		}
+
+		body.file-protocol .subtitle { display: none; }
+		.subtitle-file-protocol { display: none; }
+		body.file-protocol .subtitle-file-protocol { display: block; }
 
 		/* Control Panel */
 		#control-panel {
-			background: var(--surface);
 			border-radius: 16px;
 			padding: 24px;
 			margin-bottom: 32px;
@@ -94,7 +119,10 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 			gap: 20px;
 			border: 1px solid var(--standard-outline);
+			background: white;
 		}
+		
+		body.file-protocol #control-panel { display: none; }
 
 		.control-group {
 			display: flex;
@@ -109,7 +137,6 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 		label {
 			font-weight: 500;
 			font-size: 0.875rem;
-			color: var(--on-surface);
 			margin-bottom: 4px;
 		}
 
@@ -117,11 +144,20 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 			padding: 12px;
 			border: 1px solid var(--standard-outline);
 			border-radius: 8px;
-			background: var(--surface);
-			color: var(--on-surface);
 			font-family: inherit;
 			font-size: 0.875rem;
 			transition: border-color 0.2s ease;
+		}
+
+		select { /* Style select elements specifically for custom caret */
+			appearance: none; /* Remove default arrow */
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.207 3.396 6.604l.707-.707L8 9.793l3.896-3.896.707.707L8 11.207z'/%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: right 12px center; /* Position custom arrow */
+			background-size: 1em; /* Size the arrow relative to font size */
+			padding-right: 36px; /* Adjust right padding to make space for the arrow */
 		}
 
 		select:focus, input:focus {
@@ -136,9 +172,10 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 			gap: 16px;
 		}
+		
+		body.file-protocol #icon-grid { display: none; }
 
 		.icon-item {
-			background: var(--surface-container);
 			border-radius: 12px;
 			padding: 20px;
 			text-align: center;
@@ -158,6 +195,7 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
             position: relative;
 			background: var(--background-color);
 			border-radius: var(--background-radius);
+			transition: background-color 0.2s ease, border-radius 0.2s ease;
 		}
 
 		.icon-info {
@@ -169,67 +207,48 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 		.icon-name {
 			font-weight: 500;
 			font-size: 0.875rem;
-			color: var(--on-surface);
 		}
 
 		.icon-class {
+			appearance: none;
+			-webkit-appearance: none;
 			font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 			font-size: 0.75rem;
-			color: var(--on-surface);
-			opacity: 0.7;
 			background: rgba(103, 80, 164, 0.1);
 			padding: 4px 8px;
 			border-radius: 4px;
 			word-break: break-all;
 			position: relative;
+			color: #666;
+			border: none;
 		}
 
-		.copy-btn {
+		/* ::after pseudo-element: Copy Icon */
+		.icon-class::after {
+			content: "";
 			position: absolute;
-			top: 8px;
-			right: 8px;
-			background: var(--surface);
-			border: none;
-			border-radius: 6px;
-			padding: 2px;
-			cursor: pointer;
-			opacity: 0;
-			transition: all 0.2s ease;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: var(--on-surface);
+			top: 0;
+			right: 0;
 			width: 24px;
 			height: 24px;
-			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='%23AAA'%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E");
+			border-radius: 100%;
 			background-repeat: no-repeat;
 			background-position: center;
 			background-size: 16px 16px;
+			transform: translate(50%, -50%);
+			opacity: 0; /* Hidden by default */
+			transition: opacity 0.2s ease;
+			pointer-events: none; /* To ensure clicks go to the button */
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='%23FFF'%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E");
+			background-color: green;
 		}
 
-		.icon-class:hover .copy-btn {
+		/* Show copy icon (::after) on hover/focus */
+		.icon-class:hover::after,
+		.icon-class:focus::after {
 			opacity: 1;
 		}
 
-		.copy-btn:hover {
-			background: var(--primary);
-			color: white;
-			border-color: var(--primary);
-		}
-
-		.copy-btn:active {
-			transform: scale(0.95);
-		}
-
-		/* Stats */
-		.stats {
-			text-align: center;
-			margin-bottom: 24px;
-			color: var(--on-surface);
-			opacity: 0.7;
-		}
-
-		/* Responsive Design */
 		@media (max-width: 768px) {
 			body {
 				padding: 16px;
@@ -269,16 +288,16 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 		}
 		
 		/* Icon styles */
-		${iconStyles}	
+		${embedded ? iconBuild.embeddedStyles : iconBuild.referencedStyles}	
     </style>
 </head>
 <body>
 	<div class="container">
 		<h1>${title}</h1>
 		<p class="subtitle">${description}</p>
-		<div class="stats">
-			${icons.length} icons available
-		</div>
+		<p class="subtitle-file-protocol">Referenced icons cannot be displayed if they’re loaded into the browser from a file. You can use a server to view this file, or open the <a href="${
+			iconBuild.directories.embeddedIcons + "/demo.html"
+		}">embedded icon demo</a>.</p>
 		
 		<div id="control-panel">
 			<div class="control-group">
@@ -304,7 +323,8 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 			<div class="control-group">
 				<label for="background-color-select">Background Color</label>
 				<select id="background-color-select">
-                    <option value="transparent">Transparent</option>                
+                    <option value="transparent" selected>Transparent</option>   
+					<option value="#000000">Black</option>
 					${colorOptions}
 				</select>
 			</div>
@@ -319,7 +339,7 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 			</div>
 
 			<div class="control-group search-group">
-				<label for="search-input">Search Icons</label>
+				<label for="search-input">Search Icon Names</label>
 				<input type="text" id="search-input" placeholder="Search by name..." />
 			</div>
 		</div>
@@ -331,14 +351,19 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 
 	<script>
 	(function() {
+		const isEmbedded = ${embedded};
+		$ = selector => document.querySelector(selector);
+		$s = selector => document.querySelectorAll(selector);
+		$id = id => document.getElementById(id);
+
 		const root = document.documentElement;
-		const iconSizeSelect = document.getElementById('icon-size-select');
-		const iconColorSelect = document.getElementById('icon-color-select');
-		const backgroundColorSelect = document.getElementById('background-color-select');
-		const backgroundShapeSelect = document.getElementById('background-shape-select');
-		const searchInput = document.getElementById('search-input');
-		const iconItems = document.querySelectorAll('.icon-item');
-		const iconGrid = document.getElementById('icon-grid');
+		const iconSizeSelect = $id('icon-size-select');
+		const iconColorSelect = $id('icon-color-select');
+		const backgroundColorSelect = $id('background-color-select');
+		const backgroundShapeSelect = $id('background-shape-select');
+		const searchInput = $id('search-input');
+		const iconItems = $s('.icon-item');
+		const iconGrid = $id('icon-grid');
 
 		// Size control
 		iconSizeSelect.addEventListener('change', (e) => {
@@ -388,22 +413,16 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 
 		// Copy functionality using event delegation
 		iconGrid.addEventListener('click', async (e) => {
-			if (e.target.classList.contains('copy-btn')) {
+			const clickedButton = e.target.closest('.icon-class');
+
+			if (clickedButton) {
 				e.preventDefault();
-				const textToCopy = e.target.dataset.copy;
+				const textToCopy = clickedButton.dataset.copy;
 				
 				try {
 					await navigator.clipboard.writeText(textToCopy);
-											
 				} catch (err) {
-					console.error('Failed to copy:', err);
-					// Fallback for older browsers
-					const textarea = document.createElement('textarea');
-					textarea.value = textToCopy;
-					document.body.appendChild(textarea);
-					textarea.select();
-					document.execCommand('copy');
-					document.body.removeChild(textarea);
+					console.error('Failed to copy. Modern Clipboard API might not be supported or permission denied:', err);
 				}
 			}
 		});
@@ -413,6 +432,10 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 		root.style.setProperty('--icon-color', '#000000');
 		root.style.setProperty('--background-color', 'transparent');
 		root.style.setProperty('--background-radius', '8px');
+
+		if (window.location.protocol === 'file:' && !isEmbedded) {
+			document.body.classList.add('file-protocol');
+		}
 	})();
 	</script>
 </body>
@@ -420,5 +443,5 @@ function generateDemo({ title, icons, embedded, iconStyles }) {
 }
 
 module.exports = {
-	generateDemo
+	generateDemo,
 };

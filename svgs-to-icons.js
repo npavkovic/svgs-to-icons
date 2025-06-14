@@ -115,6 +115,8 @@ async function main() {
 			);
 			process.exit(1);
 		}
+		
+		mergedConfig.input = path.resolve(mergedConfig.input);
 
 		// 5. Set output directory (now safe to use input path)
 		const inputDirName = path.basename(mergedConfig.input);
@@ -123,6 +125,8 @@ async function main() {
 		} else {
 			mergedConfig.output = path.join(mergedConfig.output, inputDirName);
 		}
+
+		mergedConfig.output = path.resolve(mergedConfig.output);
 
 		// 6. Validate output directory and other constraints
 		if (fs.existsSync(mergedConfig.output)) {
@@ -206,6 +210,20 @@ async function main() {
 			console.log("\n⚠️  Warnings:");
 			result.warnings.forEach((warning) => console.log(`   - ${warning}`));
 		}
+
+		// Display paths to demo files if they were generated
+		if (result.demoPaths) {
+			console.log("\n✨ Demo files:");
+			if (result.demoPaths.embedded) {
+				const embeddedDemoUrl = `file://${path.resolve(result.demoPaths.embedded)}`;
+				console.log(`   🔗 Embedded Demo: \x1B]8;;${embeddedDemoUrl}\x07${embeddedDemoUrl}\x1B]8;;\x07`);
+			}
+			if (result.demoPaths.referenced) {
+				const referencedDemoUrl = `file://${path.resolve(result.demoPaths.referenced)}`;
+				console.log(`   🔗 Referenced Demo: \x1B]8;;${referencedDemoUrl}\x07${referencedDemoUrl}\x1B]8;;\x07`);
+			}
+		}
+
 	} catch (error) {
 		console.error("Unexpected error:", error.message);
 		process.exit(1);

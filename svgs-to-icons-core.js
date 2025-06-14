@@ -24,7 +24,9 @@ class SvgIconProcessor {
 			await this.createOutputDirectories();
 			await this.getSvgFiles();
 			await this.processAndWriteIcons();
-			await this.generateDemos();
+			if (this.config.demo) {
+				await this.generateDemos();
+			}
 			this.iconBuild.success = true;
 			return this.iconBuild;
 		} catch (error) {
@@ -235,29 +237,38 @@ class SvgIconProcessor {
 		// These demos provide a user-friendly interface for browsing and testing icons
 		const embeddedDemo = generateDemo({
 			title: "Embedded Icons",
-			icons: this.iconBuild.processedIcons,
 			embedded: true, // This demo uses embedded data URIs
-			iconStyles: this.iconBuild.embeddedCssRules,
+			iconBuild: this.iconBuild,
+			sourceDirectory: this.config.input,
 		});
 
 		const referencedDemo = generateDemo({
 			title: "Referenced Icons",
-			icons: this.iconBuild.processedIcons,
 			embedded: false, // This demo references external SVG files
-			iconStyles: this.iconBuild.referencedCssRules,
+			iconBuild: this.iconBuild,
+			sourceDirectory: this.config.input,
 		});
 
 		// Write all output files
 		// Demo HTML files with interactive interfaces
 
+		const embeddedDemoPath = path.join(this.iconBuild.directories.embeddedIcons, "demo.html");
+		const referencedDemoPath = path.join(this.iconBuild.directories.referencedIcons, "demo.html");
+
 		await fs.promises.writeFile(
-			path.join(this.iconBuild.directories.embeddedIcons, "demo.html"),
+			embeddedDemoPath,
 			embeddedDemo
 		);
 		await fs.promises.writeFile(
-			path.join(this.iconBuild.directories.referencedIcons, "demo.html"),
+			referencedDemoPath,
 			referencedDemo
 		);
+
+		// Store demo paths in iconBuild
+		this.iconBuild.demoPaths = {
+			embedded: embeddedDemoPath,
+			referenced: referencedDemoPath,
+		};
 	}
 }
 

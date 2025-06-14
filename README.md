@@ -1,4 +1,4 @@
-# Iconizer
+# svgs-to-icons
 
 ## Why Are You Here?
 
@@ -8,9 +8,9 @@
 - You’re looking for a solution that integrates seamlessly with vanilla HTML and CSS.
 - You want to be able to use the icons inline with text and colorize them.
 
-## What Iconizer Does
+## What svgs-to-icons Does
 
-Iconizer takes a folder of SVGs and generates:
+svgs-to-icons takes a folder of SVGs and generates:
 
 - **Optimized SVG files** with consistent, class-safe names
 - **CSS classes** that render those icons using `-webkit-mask-image`, allowing them to be colorized with `currentColor`
@@ -22,18 +22,18 @@ Iconizer takes a folder of SVGs and generates:
 
 This gives you a modern, minimal, and scalable icon system that can be used in any HTML or CSS setup — no JS required.
 
-## Installation
+## How to Use This
+
+### 0. Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/iconizer.git
-cd iconizer
+git clone https://github.com/your-username/svgs-to-icons.git
+cd svgs-to-icons
 
 # Install dependencies
 npm install
 ```
-
-## How to Use This
 
 ### 1. Create or gather a set of SVG icons in a folder:
 
@@ -44,13 +44,13 @@ npm install
 └── settings.svg
 ```
 
-### 2. Run Iconizer:
+### 2. Run svgs-to-icons:
 
 ```bash
-node iconizer.js ./my-icons
+node svgs-to-icons.js ./my-icons
 ```
 
-### 3. Iconizer will:
+### 3. svgs-to-icons will:
 
 - Optimize and sanitize the SVGs
 - Rename them to class-safe names like `lt5-home.svg`
@@ -68,11 +68,14 @@ node iconizer.js ./my-icons
 
 ### 4. Preview the results:
 
-Open the generated `demo.html` files in your browser to see the icons in action:
-- `./my-icons/css/embedded-icons/demo.html` - Icons with embedded SVG data
-- `./my-icons/css/referenced-icons/demo.html` - Icons referencing external SVG files
+Upon completion, the script will output a direct link to the `embedded-icons/demo.html` page (e.g., `file:///path/to/your/my-icons/css/embedded-icons/demo.html`). In most modern terminals, you can Command-click (macOS) or Control-click (Windows/Linux) this link to open it directly in your default web browser. This version works locally without a server because the SVG data is embedded within the CSS.
 
 The demo pages include interactive features like search and copy-to-clipboard functionality.
+
+**Important for File-Referenced Icons:**
+
+*   To view the `referenced-icons/demo.html` page, you'll need to serve it through a local web server (e.g., using `npx serve .` in the `my-icons/css/referenced-icons/` directory, or any other simple HTTP server). Browsers restrict local HTML files (`file:///`) from accessing other local files (`file:///`) for security reasons.
+*   If you host the generated SVG files on a different domain than your HTML pages in a production environment, the server hosting the SVG files **must** be configured to send appropriate CORS (Cross-Origin Resource Sharing) headers (e.g., `Access-Control-Allow-Origin: *` or your specific HTML domain). See the FAQ for more details on CORS.
 
 ### 5. Use the icons in your HTML:
 
@@ -86,6 +89,8 @@ The demo pages include interactive features like search and copy-to-clipboard fu
 
 ### 6. Style with CSS:
 
+Use `font-size` and `color`, as for text styling.
+
 ```css
 .home-icon {
   font-size: 1.25rem;
@@ -97,14 +102,31 @@ The demo pages include interactive features like search and copy-to-clipboard fu
 
 ### What’s the difference between embedded and file-referenced CSS?
 
-Iconizer generates both:
+svgs-to-icons generates both:
 
-- **Embedded** icons are inlined into the CSS as data URIs. This makes your CSS self-contained and avoids HTTP requests — ideal for a small set of icons that are always needed.
-- **File-referenced** icons are linked by `url("...")` in CSS. This keeps your CSS smaller and lets browsers cache the icons separately. It’s better for larger sets or when icons are reused across pages.
+- **Embedded** icons are inlined into the CSS as data URIs. This makes your CSS self-contained and avoids HTTP requests — ideal for a small set of icons that are always needed. You can preview this version directly in a browser from your local file system.
+- **File-referenced** icons are linked by `url(\"...\")` in CSS. This keeps your CSS smaller and lets browsers cache the icons separately. It’s better for larger sets or when icons are reused across pages. **Note:** To preview this version locally, you'll need to use a simple HTTP server. If hosting SVGs on a different domain than your HTML, ensure proper CORS configuration on the SVG server (see FAQ below).
 
 Both versions use the same class names and styling conventions.
 
-### Why does Iconizer use CSS masks?
+### Why do I need a server for file-referenced icons, and what about CORS?
+
+**Local Preview:**
+When you open an HTML file directly from your local file system (e.g., `file:///path/to/demo.html`), browsers impose strict security restrictions. These restrictions prevent the HTML file from loading other local files, such as the individual SVG files referenced by the `referenced-icons` CSS. This is why you need to use a simple local HTTP server (like `npx serve`, Python's `http.server`, or VS Code's Live Server extension) to preview the `referenced-icons/demo.html` page. Serving the files via HTTP (e.g., `http://localhost:3000/demo.html`) bypasses these local file access restrictions.
+
+**CORS for Cross-Domain Hosting:**
+CORS (Cross-Origin Resource Sharing) is a browser security feature that controls how web pages from one domain can request resources from another domain.
+
+If you host your main website (HTML/CSS) on `https://www.example.com` and decide to host your SVG icon files on a separate domain or CDN, like `https://cdn.example-icons.com`, the browser will block your CSS (from `www.example.com`) from loading the SVG files (from `cdn.example-icons.com`) unless the server at `cdn.example-icons.com` explicitly allows it.
+
+To enable this, the server hosting the SVG files must include the `Access-Control-Allow-Origin` HTTP header in its responses. For example:
+`Access-Control-Allow-Origin: https://www.example.com` (to allow only your website)
+OR
+`Access-Control-Allow-Origin: *` (to allow any website, use with caution)
+
+Without the correct CORS headers, browsers will block the requests for cross-origin SVGs, and your file-referenced icons will not appear. The embedded icons version does not have this issue as the SVGs are part of the CSS itself.
+
+### Why does svgs-to-icons use CSS masks?
 
 - **Colorizable**: Icons inherit the current text color via `currentColor`
 - **Scalable**: Size controlled by `font-size` just like text
@@ -114,7 +136,7 @@ Both versions use the same class names and styling conventions.
 
 ### How are the icons optimized?
 
-Iconizer uses [`svgo`](https://github.com/svg/svgo) to:
+svgs-to-icons uses [`svgo`](https://github.com/svg/svgo) to:
 - Remove metadata
 - Minimize path and group complexity
 - Strip unnecessary attributes
@@ -123,7 +145,7 @@ For embedded icons, we additionally minify them into `data:` URIs using [`mini-s
 
 ### Why do you rename the icons?
 
-Icon file names often contain characters that don’t work well in CSS class names. Iconizer:
+Icon file names often contain characters that don’t work well in CSS class names. svgs-to-icons:
 - Converts names to lowercase `kebab-case`
 - Adds a consistent prefix (e.g. `lt5-`)
 - Ensures valid, predictable class names like `.lt5-search-icon`
@@ -152,13 +174,11 @@ If you need accessible emoji-style icons, consider using:
 - [Twemoji](https://twemoji.twitter.com/)
 - [Noto Emoji](https://github.com/googlefonts/noto-emoji)
 
-### What’s the difference between Iconizer’s approach and React/Vue icon components?
+### What’s the difference between svgs-to-icons’s approach and React/Vue icon components?
 
-Iconizer supports two common ways of displaying icons with CSS: embedded data URIs and SVG file references. Most framework components inject SVG markup directly into the HTML instead.
+svgs-to-icons supports two common ways of displaying icons with CSS: embedded data URIs and SVG file references. Most framework components inject SVG markup directly into the HTML instead.
 
-Having SVG in HTML allows more rendering control — you can use CSS to style additional aspects like `stroke-width`, `fill` patterns, or individual paths within the icon. However, in practice, most people don’t need this level of control for icons and prefer the simplicity of single-color, scalable icons that work like text.
-
-Iconizer’s CSS approach offers several advantages:
+svgs-to-icons’s CSS approach offers several advantages:
 - **No JavaScript required** — icons work in static HTML
 - **Consistent behavior** — icons scale and color like text via `font-size` and `color`
 - **Better performance** — no component overhead or runtime SVG injection
@@ -167,35 +187,35 @@ Iconizer’s CSS approach offers several advantages:
 Component libraries are certainly convenient though, especially when built into UI frameworks like shadcn, Vuetify, Material Design, etc. They’re ideal if you need programmatic control over icon properties or want TypeScript integration for icon imports.
 
 ## Other Options for Icon Display
-Iconizer isn’t for everyone, and it’s important that you find the solution that’s the best fit for your particular use case.
+svgs-to-icons isn’t for everyone, and it’s important that you find the solution that’s the best fit for your particular use case.
 
 **FontAwesome**
-FontAwesome ([fontawesome.com](https://fontawesome.com)) offers both icon font and SVG implementations through dedicated React/Vue components that render inline SVG elements. Their Kit system provides two approaches: hosted CDN with automatic subsetting that detects icon usage and serves only needed icons, or downloadable static files containing pre-selected icons that can be used with any web project. Kits support custom icon uploads alongside FontAwesome’s library. **Pros:** Professional design quality, automatic subsetting via hosted Kits, framework-specific components, and downloadable subsets for self-hosting. **Cons:** Pro subscription costs, Kit setup workflow, and hosted versions require network requests. **Best for:** Projects needing professionally designed icons with managed subsetting. Iconizer does not have React/Vue components, but creates icon resources similar to a downloaded Kit, from a directory of SVG files.
+FontAwesome ([fontawesome.com](https://fontawesome.com)) offers both icon font and SVG implementations through dedicated React/Vue components that render inline SVG elements. Their Kit system provides two approaches: hosted CDN with automatic subsetting that detects icon usage and serves only needed icons, or downloadable static files containing pre-selected icons that can be used with any web project. Kits support custom icon uploads alongside FontAwesome’s library. **Pros:** Professional design quality, automatic subsetting via hosted Kits, framework-specific components, and downloadable subsets for self-hosting. **Cons:** Pro subscription costs, Kit setup workflow, and hosted versions require network requests. **Best for:** Projects needing professionally designed icons with managed subsetting. svgs-to-icons does not have React/Vue components, but creates icon resources similar to a downloaded Kit, from a directory of SVG files.
 
 **Iconify**
-Iconify ([iconify.design](https://iconify.design)) provides access to over 254,000 icons from 183 icon sets through both a web component and framework-specific components (React, Vue, Svelte, Ember) that load icon data on-demand from their API. Their iconify-icon web component works in vanilla HTML and renders SVG in shadow DOM, while framework components load icons from Iconify API and render them as inline SVG. Iconify API can be self-hosted for full control. For static CSS workflows similar to Iconizer, they offer a no-code API that generates CSS with embedded data URIs - simply visit URLs like `https://api.iconify.design/mdi.css?icons=account-box,account-cash` to get ready-to-use CSS with mask properties. For processing custom local SVG files, their Utils package requires Node.js programming. **Pros:** Massive selection from diverse designers, web component for vanilla JS, framework components, self-hosting options, and easy CSS generation via API URLs. **Cons:** Runtime dependency for dynamic loading, potential network requests for components, and limited to their icon collection for simple CSS generation. **Best for:** Applications needing vast icon variety with component-based integration, or projects wanting Iconizer-style CSS from their curated collection. Unlike Iconizer’s automated script that processes custom SVGs, Iconify focuses on their curated collection but offers both simple API-based and programming-based CSS generation for custom icons.
+Iconify ([iconify.design](https://iconify.design)) provides access to over 254,000 icons from 183 icon sets through both a web component and framework-specific components (React, Vue, Svelte, Ember) that load icon data on-demand from their API. Their iconify-icon web component works in vanilla HTML and renders SVG in shadow DOM, while framework components load icons from Iconify API and render them as inline SVG. Iconify API can be self-hosted for full control. For static CSS workflows similar to svgs-to-icons, they offer a no-code API that generates CSS with embedded data URIs - simply visit URLs like `https://api.iconify.design/mdi.css?icons=account-box,account-cash` to get ready-to-use CSS with mask properties. For processing custom local SVG files, their Utils package requires Node.js programming. **Pros:** Massive selection from diverse designers, web component for vanilla JS, framework components, self-hosting options, and easy CSS generation via API URLs. **Cons:** Runtime dependency for dynamic loading, potential network requests for components, and limited to their icon collection for simple CSS generation. **Best for:** Applications needing vast icon variety with component-based integration, or projects wanting svgs-to-icons-style CSS from their curated collection. Unlike svgs-to-icons’s automated script that processes custom SVGs, Iconify focuses on their curated collection but offers both simple API-based and programming-based CSS generation for custom icons.
 
 **UnoCSS Icons**
-UnoCSS by Anthony Fu, is an icon engine ([unocss.dev/presets/icons](https://unocss.dev/presets/icons)) generates utility classes for icons at build time, using the same Iconify data source with over 200,000 icons but through CSS mask properties similar to Iconizer. **Pros:** Zero runtime overhead, excellent tree-shaking, seamless integration with UnoCSS utilities, and support for custom icon loaders and collections. **Cons:** Requires UnoCSS adoption, build-time dependency, and less flexibility for custom icon processing workflows. **Best for:** Projects using UnoCSS/Tailwind-style atomic CSS. While both UnoCSS and Iconizer use CSS masks, UnoCSS generates utilities on-demand during development from Iconify’s vast collection, while Iconizer pre-generates static CSS files from your custom SVG directory with more control over the build process.
+UnoCSS by Anthony Fu, is an icon engine ([unocss.dev/presets/icons](https://unocss.dev/presets/icons)) generates utility classes for icons at build time, using the same Iconify data source with over 200,000 icons but through CSS mask properties similar to svgs-to-icons. **Pros:** Zero runtime overhead, excellent tree-shaking, seamless integration with UnoCSS utilities, and support for custom icon loaders and collections. **Cons:** Requires UnoCSS adoption, build-time dependency, and less flexibility for custom icon processing workflows. **Best for:** Projects using UnoCSS/Tailwind-style atomic CSS. While both UnoCSS and svgs-to-icons use CSS masks, UnoCSS generates utilities on-demand during development from Iconify’s vast collection, while svgs-to-icons pre-generates static CSS files from your custom SVG directory with more control over the build process.
 
 **Icônes**
-Icônes ([icones.js.org](https://icones.js.org/)) by Anthony Fu is an icon explorer and download tool that provides instant fuzzy searching across Iconify’s collection of over 254,000 icons from 183 icon sets. The web app allows users to browse, search, and select icons visually, then download them in multiple formats: individual SVG files (perfect for Iconizer workflows), icon fonts, SVG sprites, or as ready-to-use React/Vue components. All searching and filtering happens locally in the browser for fast performance. **Pros:** Instant local search across vast icon collections, visual browsing interface, multiple export formats including individual SVGs, and no account required. **Cons:** Limited to Iconify’s curated collection (albeit vast); doesn’t accommodate custom SVG files. **Best for:** Developers seeking high-quality icons from established design systems who want an easy way to discover and download specific icons. Icônes serves as an excellent starting point for Iconizer users who need to source professional icons before processing them into CSS utilities, while also offering alternative rendering approaches like fonts and sprites for different project needs.
+Icônes ([icones.js.org](https://icones.js.org/)) by Anthony Fu is an icon explorer and download tool that provides instant fuzzy searching across Iconify’s collection of over 254,000 icons from 183 icon sets. The web app allows users to browse, search, and select icons visually, then download them in multiple formats: individual SVG files (perfect for svgs-to-icons workflows), icon fonts, SVG sprites, or as ready-to-use React/Vue components. All searching and filtering happens locally in the browser for fast performance. **Pros:** Instant local search across vast icon collections, visual browsing interface, multiple export formats including individual SVGs, and no account required. **Cons:** Limited to Iconify’s curated collection (albeit vast); doesn’t accommodate custom SVG files. **Best for:** Developers seeking high-quality icons from established design systems who want an easy way to discover and download specific icons. Icônes serves as an excellent starting point for svgs-to-icons users who need to source professional icons before processing them into CSS utilities, while also offering alternative rendering approaches like fonts and sprites for different project needs.
 
 
 **Icon Loading Components**
-Framework users have multiple options for icon components: dedicated libraries like Heroicons (316 hand-crafted SVG icons by Tailwind’s creators) with individual React/Vue components, React Icons (3000+ icons from multiple libraries including FontAwesome and Bootstrap), Iconify and FontAwesome’s framework components, or UI library built-ins like those in shadcn, Radix, and Vuetify. These libraries embed SVG directly into components and typically require manual imports of specific icons (e.g., `import { BeakerIcon } from ’@heroicons/react/24/solid’`) rather than automatic detection. FontAwesome supports automatic tree-shaking out of the box, while other libraries like Heroicons and React Icons have had mixed results with build-time optimization. **Pros:** Framework integration, TypeScript support, inline SVG rendering for styling flexibility, and some tree-shaking support. **Cons:** JavaScript bundle overhead, framework lock-in, mostly manual import management, and inconsistent automatic optimization. **Best for:** Component-based applications where icons need programmatic control and developers can manage imports manually. These offer more dynamic control than Iconizer’s static CSS but require JavaScript runtime and manual dependency management.
+Framework users have multiple options for icon components: dedicated libraries like Heroicons (316 hand-crafted SVG icons by Tailwind’s creators) with individual React/Vue components, React Icons (3000+ icons from multiple libraries including FontAwesome and Bootstrap), Iconify and FontAwesome’s framework components, or UI library built-ins like those in shadcn, Radix, and Vuetify. These libraries embed SVG directly into components and typically require manual imports of specific icons (e.g., `import { BeakerIcon } from ’@heroicons/react/24/solid’`) rather than automatic detection. FontAwesome supports automatic tree-shaking out of the box, while other libraries like Heroicons and React Icons have had mixed results with build-time optimization. **Pros:** Framework integration, TypeScript support, inline SVG rendering for styling flexibility, and some tree-shaking support. **Cons:** JavaScript bundle overhead, framework lock-in, mostly manual import management, and inconsistent automatic optimization. **Best for:** Component-based applications where icons need programmatic control and developers can manage imports manually. These offer more dynamic control than svgs-to-icons’s static CSS but require JavaScript runtime and manual dependency management.
 
 **IcoMoon**
-IcoMoon ([icomoon.io](https://icomoon.io)) provides a web-based font generator that lets you select icons from their library or import custom SVGs to create subsetted icon fonts. Their workflow involves selecting desired icons, generating a custom font with only chosen glyphs, and downloading font files with CSS. The service preserves project state through selection.json files for future modifications. **Pros:** Visual icon selection interface, precise subsetting control, font format output, and offline capability once loaded. **Cons:** Manual workflow for updates, icon font accessibility issues, and dependency on their web interface. **Best for:** Projects requiring traditional icon fonts with visual subset management. Unlike Iconizer’s automated script approach, IcoMoon offers a GUI-based workflow but produces icon fonts rather than CSS mask utilities, requiring different implementation patterns and potentially less accessibility.
+IcoMoon ([icomoon.io](https://icomoon.io)) provides a web-based font generator that lets you select icons from their library or import custom SVGs to create subsetted icon fonts. Their workflow involves selecting desired icons, generating a custom font with only chosen glyphs, and downloading font files with CSS. The service preserves project state through selection.json files for future modifications. **Pros:** Visual icon selection interface, precise subsetting control, font format output, and offline capability once loaded. **Cons:** Manual workflow for updates, icon font accessibility issues, and dependency on their web interface. **Best for:** Projects requiring traditional icon fonts with visual subset management. Unlike svgs-to-icons’s automated script approach, IcoMoon offers a GUI-based workflow but produces icon fonts rather than CSS mask utilities, requiring different implementation patterns and potentially less accessibility.
 
 **Font Design Software**
-Professional font editors like Glyphs ([glyphsapp.com](https://glyphsapp.com)), FontLab ([fontlab.com](https://fontlab.com)), or the free FontForge ([fontforge.org](https://fontforge.org)) allow creating custom icon fonts from SVGs, though few are specifically optimized for icon design workflows. **Pros:** Complete control over font generation, glyph metrics, and output formats with professional-grade tools. **Cons:** Steep learning curve, complex manual workflow, time-intensive process, and icon font accessibility concerns. **Best for:** Design systems requiring ultimate control over font characteristics or specialized glyph features. Font creation offers maximum customization but requires significant typography expertise and manual effort, while Iconizer provides automated workflows with better web accessibility through CSS masks rather than custom fonts.
+Professional font editors like Glyphs ([glyphsapp.com](https://glyphsapp.com)), FontLab ([fontlab.com](https://fontlab.com)), or the free FontForge ([fontforge.org](https://fontforge.org)) allow creating custom icon fonts from SVGs, though few are specifically optimized for icon design workflows. **Pros:** Complete control over font generation, glyph metrics, and output formats with professional-grade tools. **Cons:** Steep learning curve, complex manual workflow, time-intensive process, and icon font accessibility concerns. **Best for:** Design systems requiring ultimate control over font characteristics or specialized glyph features. Font creation offers maximum customization but requires significant typography expertise and manual effort, while svgs-to-icons provides automated workflows with better web accessibility through CSS masks rather than custom fonts.
 
 ## Technical Details
 
 ### Generated CSS Structure
 
-Iconizer generates CSS classes using CSS mask properties for maximum compatibility:
+svgs-to-icons generates CSS classes using CSS mask properties for maximum compatibility:
 
 ```css
 .icon-filename {
@@ -214,11 +234,13 @@ Iconizer generates CSS classes using CSS mask properties for maximum compatibili
 - `mini-svg-data-uri`: Efficient data URI encoding
 - Node.js built-in modules: `fs`, `path`
 
-### Browser Support
+### Browser Compatibility
 
-- Modern browsers with CSS mask support
-- Fallback to `-webkit-mask` for Safari
-- Works offline (no external dependencies)
+**Icon CSS Files (CSS Masking):**
+The generated icon CSS relies on the standard, unprefixed `mask-image` property to display icons. This is well-supported in modern browsers (Chrome, Firefox, Edge, and Safari version 11+ from approximately 2017 onwards). Icons will not render correctly in browsers that require the older `-webkit-mask-image` prefix (like Safari pre-version 11 or older Chrome versions) or in Internet Explorer, which does not support CSS masking at all.
+
+**Demo Page (Clipboard API):**
+The "copy class name" feature in the demo pages uses the `navigator.clipboard.writeText` API, which is supported in most modern browsers (Chrome ~66+, Firefox ~63+, Safari ~13.1+; generally from 2018-2020 onwards) and requires a secure context (HTTPS or localhost). This feature is for demo convenience only and does not affect the functionality of the generated icon CSS in your projects. Internet Explorer does not support this API.
 
 ## Contributing
 

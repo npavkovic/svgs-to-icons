@@ -216,11 +216,13 @@ async function main() {
 			console.log("\n✨ Demo files:");
 			if (result.demoPaths.embedded) {
 				const embeddedDemoUrl = `file://${path.resolve(result.demoPaths.embedded)}`;
-				console.log(`   🔗 Embedded Demo: \x1B]8;;${embeddedDemoUrl}\x07${embeddedDemoUrl}\x1B]8;;\x07`);
+				console.log(`   🔗 Embedded Demo (click to view): \x1B]8;;${embeddedDemoUrl}\x07${embeddedDemoUrl}\x1B]8;;\x07`);
 			}
 			if (result.demoPaths.referenced) {
-				const referencedDemoUrl = `file://${path.resolve(result.demoPaths.referenced)}`;
-				console.log(`   🔗 Referenced Demo: \x1B]8;;${referencedDemoUrl}\x07${referencedDemoUrl}\x1B]8;;\x07`);
+				const referencedDemoPath = path.resolve(result.demoPaths.referenced);
+				console.log(`   🔗 Referenced Demo: ${referencedDemoPath}`);
+				console.log(`      To view file-referenced icons, a local server is needed.`);
+				console.log(`      Please see README.md for instructions (e.g., run 'npx serve .')`);
 			}
 		}
 

@@ -157,7 +157,18 @@ class SvgIconProcessor {
 				// Optimize the SVG using SVGO
 				// This removes unnecessary code, comments, and metadata to reduce file size
 				optimizedSvg = optimize(svgContent, {
-					multipass: true, // Run optimization multiple times for better results
+					multipass: true,
+					plugins: [
+						{
+							name: "preset-default",
+							params: {
+								overrides: {
+									removeViewBox: false,
+								},
+							},
+						},
+						"removeDimensions",
+					],
 				}).data;
 			} catch (error) {
 				this.iconBuild.warnings.push(
@@ -231,7 +242,6 @@ class SvgIconProcessor {
 	}
 
 	async generateDemos() {
-
 		console.log(this.iconBuild.processedIcons);
 		// Generate interactive demo HTML files
 		// These demos provide a user-friendly interface for browsing and testing icons
@@ -252,17 +262,17 @@ class SvgIconProcessor {
 		// Write all output files
 		// Demo HTML files with interactive interfaces
 
-		const embeddedDemoPath = path.join(this.iconBuild.directories.embeddedIcons, "demo.html");
-		const referencedDemoPath = path.join(this.iconBuild.directories.referencedIcons, "demo.html");
+		const embeddedDemoPath = path.join(
+			this.iconBuild.directories.embeddedIcons,
+			"index.html"
+		);
+		const referencedDemoPath = path.join(
+			this.iconBuild.directories.referencedIcons,
+			"index.html"
+		);
 
-		await fs.promises.writeFile(
-			embeddedDemoPath,
-			embeddedDemo
-		);
-		await fs.promises.writeFile(
-			referencedDemoPath,
-			referencedDemo
-		);
+		await fs.promises.writeFile(embeddedDemoPath, embeddedDemo);
+		await fs.promises.writeFile(referencedDemoPath, referencedDemo);
 
 		// Store demo paths in iconBuild
 		this.iconBuild.demoPaths = {

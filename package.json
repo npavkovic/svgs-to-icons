@@ -1,13 +1,13 @@
 {
   "name": "svgs-to-icons",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Convert SVG files to CSS classes with mask properties",
   "main": "svgs-to-icons.js",
   "bin": {
     "svgs-to-icons": "./svgs-to-icons.js"
   },
   "scripts": {
-    "dev": "node svgs-to-icons.js ./chair-icons",
+    "dev": "node svgs-to-icons.js ./examples/chair-icons",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

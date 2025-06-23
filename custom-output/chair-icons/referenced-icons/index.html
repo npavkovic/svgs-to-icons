@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referenced Icons - Referenced Icons</title>
+    <meta name="description" content="9 Icons generated with references to external SVG files. You’ll need both the CSS and the folder of SVG files to use these icons.</p><p class="info">Source: /Users/nicholaspavkovic/Repos/svgs-to-icons/chair-icons<br>Output: /Users/nicholaspavkovic/Repos/svgs-to-icons/custom-output/chair-icons/referenced-icons<br>Click on the icon class to copy the HTML to the clipboard.</p>">
+    <script>
+		<!-- Set the dark-mode class based on current user preference -->
+	   document.body.classList.toggle('dark-mode', window.matchMedia("(prefers-color-scheme: dark)").matches);
+	</script>
+	<style>
+	@import "./icons.css";
+		:root {
+			--icon-size: 48px;
+			--icon-color: #000000;
+			--background-color: transparent;
+			--background-radius: 8px;
+			--br: 12px;
+
+			--border-primary: #D1D1D1;
+			--button-on-surface-hover: #000;
+			--button-on-surface-selected: #FFF;
+			--button-on-surface: #444;
+			--button-surface-hover:rgb(204, 204, 204);
+			--button-surface-selected: #000;
+			--button-surface:#e6e6e6;
+			--focused-outline:rgb(102, 116, 169);
+			--on-surface-primary: #000;
+			--on-surface-secondary: #454545;
+			--surface-primary: hsl(0, 0%, 95%);
+			--surface-secondary: #FFF;
+		}
+
+		body.dark-mode {
+			--border-primary: #333;
+			--border-primary: #444;
+			--button-on-surface-hover: #FFF;
+			--button-on-surface-selected: #222;
+			--button-on-surface: #AAA;
+			--button-surface-hover: #444;
+			--button-surface-selected: #FFF;
+			--button-surface: #333;
+			--focused-outline:rgb(124, 141, 199);
+			--on-surface-primary: #FFF;
+			--on-surface-secondary: #CCC;
+			--surface-primary: hsl(0, 0%, 10%);
+			--surface-secondary: #000;
+		}
+
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		*:focus {
+  				outline: none;
+		}
+
+		*:focus-visible {
+  outline: 2px solid var(--focused-outline);
+  outline-offset: 2px;
+}
+
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+			background: var(--surface-primary);
+			color: #444;
+			line-height: 1.5;
+			padding: 24px;
+			min-height: 100vh;
+			text-wrap: pretty;
+			color: var(--on-surface-primary);
+			transition: background-color 0.3s ease, color 0.3s ease;
+		}
+
+		a {
+			color: inherit;
+			text-underline-offset: 5px;
+			text-decoration-color: #666;
+		}
+
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+
+		header {
+			max-width: 725px;
+			margin: 0 auto 54px auto; 
+			
+			> * {
+			margin: 0 auto 8px auto;
+		}
+	}
+
+		h1 {
+			font-size: 2.5rem;
+			text-align: center;
+		}
+
+		.subtitle, .subtitle-file-protocol, .info  {
+			text-align: center;
+			color: var(--on-surface-secondary);
+			font-size: 1rem;
+		}
+
+		.info {
+			font-size: 0.75rem;
+			}
+
+		body.file-protocol .subtitle { display: none; }
+		.subtitle-file-protocol { display: none; }
+		body.file-protocol .subtitle-file-protocol { display: block; }
+
+				.theme-toggle-container {
+			display: flex;
+			width: fit-content;
+			margin-top: 16px;
+
+		& input {
+			position: absolute; 
+			opacity: 0; 
+			width: 0; 
+			height: 0;
+			}
+
+		& label {
+			cursor: pointer;
+			display: inline-block;
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			background-color: var(--button-surface);
+			color: var(--button-on-surface);
+			margin-right: 8px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background-color 0.2s ease;
+		}
+
+		& input[type="radio"]:focus-visible + label {
+			outline: 2px solid var(--focused-outline);
+			outline-offset: 2px;
+			}
+
+		& input[type="radio"]:checked + label {
+			background-color: var(--button-surface-selected);
+			color: var(--button-on-surface-selected);
+			}
+
+		& input[type="radio"]:focus-visible + label {
+			outline: 2px solid var(-focused-outline);
+			outline-offset: 2px;
+		}
+				
+	}
+
+		/* Control Panel */
+		#control-panel {
+			border-radius: var(--br);
+			padding: 24px;
+			margin: 0 auto 32px auto;
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr;
+			gap: 20px;
+			background: var(--surface-secondary);
+		}
+		
+		body.file-protocol #control-panel { display: none; }
+
+		.control-group {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.search-group {
+			grid-column: 1 / -1;
+		}
+
+		label {
+			font-weight: bold;
+			font-size: 0.875rem;
+		}
+
+		select, input {
+			padding: 12px;
+			border: 1px solid var(--border-primary);
+			border-radius: 8px;
+			font-family: inherit;
+			font-size: 0.875rem;
+			transition: border-color 0.2s ease;
+		}
+
+		/* Style select elements specifically for custom caret */
+		select { 
+			appearance: none;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.207 3.396 6.604l.707-.707L8 9.793l3.896-3.896.707.707L8 11.207z'/%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: right 12px center;
+			background-size: 1em;
+			padding-right: 36px;
+		}
+
+		/* Icon Grid */
+		#icon-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			gap: 16px;
+		}
+		
+		body.file-protocol #icon-grid { display: none; }
+
+		.icon-item {
+			border-radius: var(--br);
+			padding: 20px;
+			text-align: center;
+			transition: all 0.2s ease;
+			position: relative;
+			background: var(--surface-secondary);
+		}
+
+		.icon-wrapper {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin: 0 auto 16px auto;
+			padding: calc(var(--icon-size) / 3);
+			width: min-content;
+			aspect-ratio: 1;
+			position: relative;
+			background: var(--background-color);
+			border-radius: var(--background-radius);
+			transition: background-color 0.2s ease, border-radius 0.2s ease;
+		}
+
+		.icon-info {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		.icon-name {
+			font-weight: bold;
+			font-size: 0.875rem;
+		}
+
+		.icon-class {
+			appearance: none;
+			-webkit-appearance: none;
+			font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+			font-size: 0.75rem;
+			padding: 4px 8px;
+			border-radius: 4px;
+			word-break: break-all;
+			position: relative;
+			border: none;
+			background-color: var(--button-surface);
+			color: var(--button-on-surface);
+			transition: background-color 0.3s ease, color 0.3s ease;
+		}
+
+		.icon-class:hover {
+			background-color: var(--button-surface-hover);
+			color: var(--button-on-surface-hover);
+		}
+
+		@media (max-width: 960px) {
+			#control-panel {
+			grid-template-columns: 1fr 1fr;}
+			
+			#icon-grid {
+				grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+			}
+	}
+
+		@media (max-width: 640px) {
+			body {
+				padding: 16px;
+			}
+
+			h1 {
+				font-size: 2rem;
+			}
+
+			#control-panel {
+				grid-template-columns: 1fr;
+			}
+
+									#icon-grid {
+				grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+			}
+
+
+			.icon-item {
+				padding: 16px;
+			}
+		}
+
+		/* Demo-specific icon styles that use CSS variables for interactive controls */
+		[class*="-icon"] {
+			/* Base mask properties */
+			mask-size: 100% 100%;
+			mask-repeat: no-repeat;
+			mask-position: center;
+			display: inline-block;
+			
+			/* Variable-controlled properties for demo */
+			width: var(--icon-size);
+			height: var(--icon-size);
+			background-color: var(--icon-color);
+			position: relative;
+			transition: all 0.2s ease;
+		}
+		
+		/* Icon styles */
+		undefined	
+	</style>
+</head>
+<body>
+	<div class="container">
+	<header>
+		<h1>Referenced Icons</h1>
+		<p class="subtitle">9 Icons generated with references to external SVG files. You’ll need both the CSS and the folder of SVG files to use these icons.</p><p class="info">Source: /Users/nicholaspavkovic/Repos/svgs-to-icons/chair-icons<br>Output: /Users/nicholaspavkovic/Repos/svgs-to-icons/custom-output/chair-icons/referenced-icons<br>Click on the icon class to copy the HTML to the clipboard.</p></p>
+		<p class="subtitle-file-protocol">Referenced icons cannot be displayed if they’re loaded into the browser from a file. You can use a server to view this file, or open the <a href="/Users/nicholaspavkovic/Repos/svgs-to-icons/custom-output/chair-icons/embedded-icons/index.html">embedded icon demo</a>.</p>
+
+		<div class="theme-toggle-container">
+				<input type="radio" id="theme-light" name="theme" value="light">
+				<label for="theme-light" title="Light Mode">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+				</label>
+				<input type="radio" id="theme-dark" name="theme" value="dark" >
+				<label for="theme-dark" title="Dark Mode">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+				</label>
+		</div>
+		
+</header>
+		
+		<div id="control-panel">
+			<div class="control-group">
+				<label for="icon-size-select">Size</label>
+				<select id="icon-size-select">
+					<option value="16">16px</option>
+					<option value="24">24px</option>
+					<option value="32">32px</option>
+					<option value="48" selected>48px</option>
+					<option value="64">64px</option>
+					<option value="96">96px</option>
+				</select>
+			</div>
+
+			<div class="control-group">
+				<label for="icon-color-select">Icon Color</label>
+				<select id="icon-color-select">
+					<option id="icon-color-option-black" value="#000000" selected>Black</option>
+					<option id="icon-color-option-white" value="#FFFFFF">White</option>
+					<option value="#2196F3" data-name="blue">Blue</option><option value="#42A5F5" data-name="blue-lighten-10">Blue Lighten 10</option><option value="#64B5F6" data-name="blue-lighten-20">Blue Lighten 20</option><option value="#90CAF9" data-name="blue-lighten-30">Blue Lighten 30</option><option value="#1E88E5" data-name="blue-darken-10">Blue Darken 10</option><option value="#1976D2" data-name="blue-darken-20">Blue Darken 20</option><option value="#1565C0" data-name="blue-darken-30">Blue Darken 30</option><option value="#4CAF50" data-name="green">Green</option><option value="#66BB6A" data-name="green-lighten-10">Green Lighten 10</option><option value="#81C784" data-name="green-lighten-20">Green Lighten 20</option><option value="#A5D6A7" data-name="green-lighten-30">Green Lighten 30</option><option value="#43A047" data-name="green-darken-10">Green Darken 10</option><option value="#388E3C" data-name="green-darken-20">Green Darken 20</option><option value="#2E7D32" data-name="green-darken-30">Green Darken 30</option><option value="#F44336" data-name="red">Red</option><option value="#EF5350" data-name="red-lighten-10">Red Lighten 10</option><option value="#E57373" data-name="red-lighten-20">Red Lighten 20</option><option value="#FFCDD2" data-name="red-lighten-30">Red Lighten 30</option><option value="#E53935" data-name="red-darken-10">Red Darken 10</option><option value="#D32F2F" data-name="red-darken-20">Red Darken 20</option><option value="#C62828" data-name="red-darken-30">Red Darken 30</option><option value="#FFEB3B" data-name="yellow">Yellow</option><option value="#FFF176" data-name="yellow-lighten-10">Yellow Lighten 10</option><option value="#FFF59D" data-name="yellow-lighten-20">Yellow Lighten 20</option><option value="#FFF9C4" data-name="yellow-lighten-30">Yellow Lighten 30</option><option value="#FDD835" data-name="yellow-darken-10">Yellow Darken 10</option><option value="#FF9800" data-name="orange">Orange</option><option value="#FFB74D" data-name="orange-lighten-10">Orange Lighten 10</option><option value="#FFCC80" data-name="orange-lighten-20">Orange Lighten 20</option><option value="#FFE0B2" data-name="orange-lighten-30">Orange Lighten 30</option><option value="#FB8C00" data-name="orange-darken-10">Orange Darken 10</option><option value="#F57C00" data-name="orange-darken-20">Orange Darken 20</option><option value="#EF6C00" data-name="orange-darken-30">Orange Darken 30</option><option value="#9C27B0" data-name="purple">Purple</option><option value="#AB47BC" data-name="purple-lighten-10">Purple Lighten 10</option><option value="#BA68C8" data-name="purple-lighten-20">Purple Lighten 20</option><option value="#CE93D8" data-name="purple-lighten-30">Purple Lighten 30</option><option value="#8E24AA" data-name="purple-darken-10">Purple Darken 10</option><option value="#7B1FA2" data-name="purple-darken-20">Purple Darken 20</option><option value="#6A1B9A" data-name="purple-darken-30">Purple Darken 30</option><option value="#009688" data-name="teal">Teal</option><option value="#26A69A" data-name="teal-lighten-10">Teal Lighten 10</option><option value="#4DB6AC" data-name="teal-lighten-20">Teal Lighten 20</option><option value="#80CBC4" data-name="teal-lighten-30">Teal Lighten 30</option><option value="#00897B" data-name="teal-darken-10">Teal Darken 10</option><option value="#00796B" data-name="teal-darken-20">Teal Darken 20</option><option value="#00695C" data-name="teal-darken-30">Teal Darken 30</option><option value="#9E9E9E" data-name="gray">Gray</option><option value="#FAFAFA" data-name="gray-lighten-40">Gray Lighten 40</option><option value="#F5F5F5" data-name="gray-lighten-30">Gray Lighten 30</option><option value="#EEEEEE" data-name="gray-lighten-20">Gray Lighten 20</option><option value="#E0E0E0" data-name="gray-lighten-10">Gray Lighten 10</option><option value="#757575" data-name="gray-darken-10">Gray Darken 10</option><option value="#616161" data-name="gray-darken-20">Gray Darken 20</option><option value="#424242" data-name="gray-darken-30">Gray Darken 30</option><option value="#212121" data-name="gray-darken-40">Gray Darken 40</option>
+				</select>
+			</div>
+
+			<div class="control-group">
+				<label for="background-color-select">Background Color</label>
+				<select id="background-color-select">
+					<option value="#000000" selected>Black</option>
+					<option value="#FFFFFF" selected>White</option>
+					<option value="transparent" selected>Transparent</option>   
+					<option value="#000000">Black</option>
+					<option value="#2196F3" data-name="blue">Blue</option><option value="#42A5F5" data-name="blue-lighten-10">Blue Lighten 10</option><option value="#64B5F6" data-name="blue-lighten-20">Blue Lighten 20</option><option value="#90CAF9" data-name="blue-lighten-30">Blue Lighten 30</option><option value="#1E88E5" data-name="blue-darken-10">Blue Darken 10</option><option value="#1976D2" data-name="blue-darken-20">Blue Darken 20</option><option value="#1565C0" data-name="blue-darken-30">Blue Darken 30</option><option value="#4CAF50" data-name="green">Green</option><option value="#66BB6A" data-name="green-lighten-10">Green Lighten 10</option><option value="#81C784" data-name="green-lighten-20">Green Lighten 20</option><option value="#A5D6A7" data-name="green-lighten-30">Green Lighten 30</option><option value="#43A047" data-name="green-darken-10">Green Darken 10</option><option value="#388E3C" data-name="green-darken-20">Green Darken 20</option><option value="#2E7D32" data-name="green-darken-30">Green Darken 30</option><option value="#F44336" data-name="red">Red</option><option value="#EF5350" data-name="red-lighten-10">Red Lighten 10</option><option value="#E57373" data-name="red-lighten-20">Red Lighten 20</option><option value="#FFCDD2" data-name="red-lighten-30">Red Lighten 30</option><option value="#E53935" data-name="red-darken-10">Red Darken 10</option><option value="#D32F2F" data-name="red-darken-20">Red Darken 20</option><option value="#C62828" data-name="red-darken-30">Red Darken 30</option><option value="#FFEB3B" data-name="yellow">Yellow</option><option value="#FFF176" data-name="yellow-lighten-10">Yellow Lighten 10</option><option value="#FFF59D" data-name="yellow-lighten-20">Yellow Lighten 20</option><option value="#FFF9C4" data-name="yellow-lighten-30">Yellow Lighten 30</option><option value="#FDD835" data-name="yellow-darken-10">Yellow Darken 10</option><option value="#FF9800" data-name="orange">Orange</option><option value="#FFB74D" data-name="orange-lighten-10">Orange Lighten 10</option><option value="#FFCC80" data-name="orange-lighten-20">Orange Lighten 20</option><option value="#FFE0B2" data-name="orange-lighten-30">Orange Lighten 30</option><option value="#FB8C00" data-name="orange-darken-10">Orange Darken 10</option><option value="#F57C00" data-name="orange-darken-20">Orange Darken 20</option><option value="#EF6C00" data-name="orange-darken-30">Orange Darken 30</option><option value="#9C27B0" data-name="purple">Purple</option><option value="#AB47BC" data-name="purple-lighten-10">Purple Lighten 10</option><option value="#BA68C8" data-name="purple-lighten-20">Purple Lighten 20</option><option value="#CE93D8" data-name="purple-lighten-30">Purple Lighten 30</option><option value="#8E24AA" data-name="purple-darken-10">Purple Darken 10</option><option value="#7B1FA2" data-name="purple-darken-20">Purple Darken 20</option><option value="#6A1B9A" data-name="purple-darken-30">Purple Darken 30</option><option value="#009688" data-name="teal">Teal</option><option value="#26A69A" data-name="teal-lighten-10">Teal Lighten 10</option><option value="#4DB6AC" data-name="teal-lighten-20">Teal Lighten 20</option><option value="#80CBC4" data-name="teal-lighten-30">Teal Lighten 30</option><option value="#00897B" data-name="teal-darken-10">Teal Darken 10</option><option value="#00796B" data-name="teal-darken-20">Teal Darken 20</option><option value="#00695C" data-name="teal-darken-30">Teal Darken 30</option><option value="#9E9E9E" data-name="gray">Gray</option><option value="#FAFAFA" data-name="gray-lighten-40">Gray Lighten 40</option><option value="#F5F5F5" data-name="gray-lighten-30">Gray Lighten 30</option><option value="#EEEEEE" data-name="gray-lighten-20">Gray Lighten 20</option><option value="#E0E0E0" data-name="gray-lighten-10">Gray Lighten 10</option><option value="#757575" data-name="gray-darken-10">Gray Darken 10</option><option value="#616161" data-name="gray-darken-20">Gray Darken 20</option><option value="#424242" data-name="gray-darken-30">Gray Darken 30</option><option value="#212121" data-name="gray-darken-40">Gray Darken 40</option>
+				</select>
+			</div>
+
+			<div class="control-group">
+				<label for="background-shape-select">Background Shape</label>
+				<select id="background-shape-select">
+					<option value="rounded" selected>Rounded Rectangle</option>
+					<option value="circle">Circle</option>
+					<option value="square">Square</option>
+				</select>
+			</div>
+
+			<div class="control-group search-group">
+				<label for="search-input">Search Icon Names</label>
+				<input type="text" id="search-input" placeholder="Search by name..." />
+			</div>
+		</div>
+
+		<div id="icon-grid">
+			
+		<div class="icon-item" data-name="bx chair" data-class="bx-chair-icon">
+			<div class="icon-wrapper">
+				<div class="bx-chair-icon"></div>
+			</div>
+			<div class="icon-info">
+				<p class="icon-name">Bx Chair</p>
+				<button class="icon-class" data-copy='&lt;span class=&quot;bx-chair-icon&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=&quot;bx-chair-icon&quot;&gt;&lt;/span&gt;'">bx-chair-icon
+				</button>
+</p>
+			</div>
+		</div>
+	
+		<div class="icon-item" data-name="fa6 solid chair" data-class="fa6-solid-chair-icon">
+			<div class="icon-wrapper">
+				<div class="fa6-solid-chair-icon"></div>
+			</div>
+			<div class="icon-info">
+				<p class="icon-name">Fa6 Solid Chair</p>
+				<button class="icon-class" data-copy='&lt;span class=&quot;fa6-solid-chair-icon&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=&quot;fa6-solid-chair-icon&quot;&gt;&lt;/span&gt;'">fa6-solid-chair-icon
+				</button>
+</p>
+			</div>
+		</div>
+	
+		<div class="icon-item" data-name="hugeicons chair 01" data-class="hugeicons-chair-01-icon">
+			<div class="icon-wrapper">
+				<div class="hugeicons-chair-01-icon"></div>
+			</div>
+			<div class="icon-info">
+				<p class="icon-name">Hugeicons Chair 01</p>
+				<button class="icon-class" data-copy='&lt;span class=&quot;hugeicons-chair-01-icon&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=&quot;hugeicons-chair-01-icon&quot;&gt;&lt;/span&gt;'">hugeicons-chair-01-icon
+				</button>
+</p>
+			</div>
+		</div>
+	
+		<div class="icon-item" data-name="hugeicons chair 04" data-class="hugeicons-chair-04-icon">
+			<div class="icon-wrapper">
+				<div class="hugeicons-chair-04-icon"></div>
+			</div>
+			<div class="icon-info">
+				<p class="icon-name">Hugeicons Chair 04</p>
+				<button class="icon-class" data-copy='&lt;span class=&quot;hugeicons-chair-04-icon&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=&quot;hugeicons-chair-04-icon&quot;&gt;&lt;/span&gt;'">hugeicons-chair-04-icon
+				</button>
+</p>
+			</div>
+		</div>
+	
+		<div class="icon-item" data-name="hugeicons chair 05" data-class="hugeicons-chair-05-icon">
+			<div class="icon-wrapper">
+				<div class="hugeicons-chair-05-icon"></div>
+			</div>
+			<div class="icon-info">
+				<p class="icon-name">Hugeicons Chair 05</p>
+				<button class="icon-class" data-copy='&lt;span class=&quot;hugeicons-chair-05-icon&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=&quot;hugeicons-chair-05-icon&quot;&gt;&lt;/span&gt;'">hugeicons-chair-05-icon
+				</button>
+</p>
+			</div>
+		</div>
+	
+		<div class="icon-item" data-name="hugeicons chair barber" data-class="hugeicons-chair-barber-icon">
+			<div class="icon-wrapper">
+				<div class="hugeicons-chair-barber-icon"></div>
+			</div>
+			<div class="icon-info">
+				<p class="icon-name">Hugeicons Chair Barber</p>
+				<button class="icon-class" data-copy='&lt;span class=&quot;hugeicons-chair-barber-icon&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=&quot;hugeicons-chair-barber-icon&quot;&gt;&lt;/span&gt;'">hugeicons-chair-barber-icon
+				</button>
+</p>
+			</div>
+		</div>
+	
+		<div class="icon-item" data-name="hugeicons office chair" data-class="hugeicons-office-chair-icon">
+			<div class="icon-wrapper">
+				<div class="hugeicons-office-chair-icon"></div>
+			</div>
+			<div class="icon-info">
+				<p class="icon-name">Hugeicons Office Chair</p>
+				<button class="icon-class" data-copy='&lt;span class=&quot;hugeicons-office-chair-icon&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=&quot;hugeicons-office-chair-icon&quot;&gt;&lt;/span&gt;'">hugeicons-office-chair-icon
+				</button>
+</p>
+			</div>
+		</div>
+	
+		<div class="icon-item" data-name="ic outline chair alt" data-class="ic-outline-chair-alt-icon">
+			<div class="icon-wrapper">
+				<div class="ic-outline-chair-alt-icon"></div>
+			</div>
+			<div class="icon-info">
+				<p class="icon-name">Ic Outline Chair Alt</p>
+				<button class="icon-class" data-copy='&lt;span class=&quot;ic-outline-chair-alt-icon&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=&quot;ic-outline-chair-alt-icon&quot;&gt;&lt;/span&gt;'">ic-outline-chair-alt-icon
+				</button>
+</p>
+			</div>
+		</div>
+	
+		<div class="icon-item" data-name="ic round chair" data-class="ic-round-chair-icon">
+			<div class="icon-wrapper">
+				<div class="ic-round-chair-icon"></div>
+			</div>
+			<div class="icon-info">
+				<p class="icon-name">Ic Round Chair</p>
+				<button class="icon-class" data-copy='&lt;span class=&quot;ic-round-chair-icon&quot;&gt;&lt;/span&gt;' title="Copy '&lt;span class=&quot;ic-round-chair-icon&quot;&gt;&lt;/span&gt;'">ic-round-chair-icon
+				</button>
+</p>
+			</div>
+		</div>
+	
+		</div>
+	</div>
+
+	<script>
+	(function() {
+		const isEmbedded = false;
+		$ = selector => document.querySelector(selector);
+		$s = selector => document.querySelectorAll(selector);
+		$id = id => document.getElementById(id);
+
+		const root = document.documentElement;
+		const iconSizeSelect = $id('icon-size-select');
+		const iconColorSelect = $id('icon-color-select');
+		const backgroundColorSelect = $id('background-color-select');
+		const backgroundShapeSelect = $id('background-shape-select');
+		const searchInput = $id('search-input');
+		const iconGrid = $id('icon-grid');
+		const colorModeButtons = $('.theme-toggle-container');
+
+		// Set initial theme mode based on body class
+		const lightModeButton = $id('theme-light');
+		const darkModeButton = $id('theme-dark');
+		const darkModeOn = document.body.classList.contains('dark-mode');
+		lightModeButton.checked = !darkModeOn;
+		darkModeButton.checked = darkModeOn;
+		$id('icon-color-option-black').selected = !darkModeOn;
+		$id('icon-color-option-white').selected = darkModeOn;
+
+		// Theme mode toggle
+		colorModeButtons.addEventListener('change', (e) => {
+			document.body.classList.toggle('dark-mode', e.target.value === 'dark');
+		});
+
+		// Size control
+		iconSizeSelect.addEventListener('change', (e) => {
+			const size = e.target.value + 'px';
+			root.style.setProperty('--icon-size', size);
+		});
+
+		// Icon color control
+		iconColorSelect.addEventListener('change', (e) => {
+			root.style.setProperty('--icon-color', e.target.value);
+		});
+
+		// Background color control
+		backgroundColorSelect.addEventListener('change', (e) => {
+			root.style.setProperty('--background-color', e.target.value);
+		});
+
+		// Background shape control
+		backgroundShapeSelect.addEventListener('change', (e) => {
+			const shape = e.target.value;
+			let radius;
+			switch(shape) {
+				case 'circle':
+					radius = '50%';
+					break;
+				case 'square':
+					radius = '0';
+					break;
+				case 'rounded':
+				default:
+					radius = '8px';
+					break;
+			}
+			root.style.setProperty('--background-radius', radius);
+		});
+
+		// Search functionality
+		searchInput.addEventListener('input', (e) => {
+			const searchTerm = e.target.value.toLowerCase();
+			iconItems.forEach(item => {
+				const name = item.dataset.name;
+				const className = item.dataset.class;
+				const matches = name.includes(searchTerm) || className.includes(searchTerm);
+				item.style.display = matches ? 'block' : 'none';
+			});
+		});
+
+		// Initialize styles that are set by controls
+		root.style.setProperty('--icon-size', '48px');
+		root.style.setProperty('--icon-color', '#000000');
+		root.style.setProperty('--background-color', 'transparent');
+		root.style.setProperty('--background-radius', '8px');
+
+
+		// Copy functionality using event delegation
+		iconGrid.addEventListener('click', async (e) => {
+			if(!e.target.classList.contains('icon-class')) return;
+			console.log('Copy button clicked');
+				e.preventDefault();
+				try {
+					await navigator.clipboard.writeText(e.target.dataset.copy);
+				} catch (err) {
+					console.error('Failed to copy. Modern Clipboard API might not be supported or permission denied:', err);
+				}
+		
+		});
+
+		// Display error message if trying to view referenced icons via file
+		if (window.location.protocol === 'file:' && !isEmbedded) {
+			document.body.classList.add('file-protocol');
+		}
+	})();
+	</script>
+</body>
+</html>

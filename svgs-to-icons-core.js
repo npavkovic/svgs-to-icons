@@ -73,7 +73,6 @@ class SvgIconProcessor {
 		// Remove file extension
 		const nameWithoutExtension = filename.replace(/\.[^/.]+$/, "");
 
-		console.log(`Creating display name for: ${nameWithoutExtension}`);
 		const newName = nameWithoutExtension
 			.replace(/[^a-zA-Z0-9]/g, " ")
 			.replace(/\s+/g, " ")
@@ -82,7 +81,6 @@ class SvgIconProcessor {
 			.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
 			.join(" ");
 
-		console.log(`Display name created: ${newName}`);
 		return newName || "Unnamed Icon"; // Fallback if the name is empty
 	}
 
@@ -116,7 +114,6 @@ class SvgIconProcessor {
 	async getSvgFiles() {
 		// Returns an array of SVG file paths from the input directory
 		const files = await fs.promises.readdir(this.config.input);
-		console.log(`Found ${files.length} files in input directory.`);
 		const svgFiles = files
 			.filter((file) => path.extname(file).toLowerCase() === ".svg")
 			.map((file) => path.join(this.config.input, file));
@@ -242,7 +239,6 @@ class SvgIconProcessor {
 	}
 
 	async generateDemos() {
-		console.log(this.iconBuild.processedIcons);
 		// Generate interactive demo HTML files
 		// These demos provide a user-friendly interface for browsing and testing icons
 		const embeddedDemo = generateDemo({

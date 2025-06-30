@@ -7,18 +7,28 @@
     "svgs-to-icons": "./svgs-to-icons.js"
   },
   "scripts": {
-    "dev": "node svgs-to-icons.js ./examples/chair-icons",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test"
   },
   "keywords": [
     "svg",
     "css",
     "icons",
     "mask",
-    "cli"
+    "cli",
+    "icon-system",
+    "css-masks",
+    "svg-optimization"
   ],
   "author": "Nicholas Pavkovic",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/npavkovic/svgs-to-icons.git"
+  },
+  "homepage": "https://github.com/npavkovic/svgs-to-icons#readme",
+  "bugs": {
+    "url": "https://github.com/npavkovic/svgs-to-icons/issues"
+  },
   "engines": {
     "node": ">=14.0.0"
   },

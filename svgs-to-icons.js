@@ -221,8 +221,7 @@ async function main() {
 			if (result.demoPaths.referenced) {
 				const referencedDemoPath = path.resolve(result.demoPaths.referenced);
 				console.log(`   🔗 Referenced Demo: ${referencedDemoPath}`);
-				console.log(`      To view file-referenced icons, a local server is needed.`);
-				console.log(`      Please see README.md for instructions (e.g., run 'npx serve .')`);
+				console.log(`      To view file-referenced icons, a local server is needed. Please see README.md for further instructions.`);
 			}
 		}
 

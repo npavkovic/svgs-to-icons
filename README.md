@@ -3,7 +3,7 @@
 `svgs-to-icons` takes a folder of SVGs and generates:
 
 - **Optimized SVG files** with consistent, class-safe names
-- **CSS classes** that render those icons using `-webkit-mask-image`, allowing them to be colorized with `currentColor`
+- **CSS classes** that render those icons using `mask-image`, allowing them to be colorized with `currentColor`
 - **Two versions of the CSS:**
   - **Embedded**: SVGs are inlined using `data:` URIs
   - **File-referenced**: SVGs are linked via `url("icon.svg")`
@@ -41,44 +41,42 @@ npm install
 └── settings.svg
 ```
 
-### 2. Run svgs-to-icons:
+### 2. Run `svgs-to-icons`:
 
 ```bash
 node svgs-to-icons.js ./my-icons
 ```
 
-### 3. svgs-to-icons will:
+### 3. `svgs-to-icons` will:
 
 - Optimize and sanitize the SVGs
-- Rename them to class-safe names (i.e., no leading numerals, special characters, etc.) — see Limitations.
+- Rename them to class-safe names (i.e., no leading numerals, special characters, etc.) — see [CSS Class Name Collisions](#css-class-name-collisions).
 - Generate output at:
 
 ```
-./my-icons/css/
+dist/my-icons/
 ├── embedded-icons/
-│   ├── icon-css/
-│   └── index.html
+│   ├── icons.css
+│   └── index.html (demo)
 └── referenced-icons/
-    ├── icon-css/
-    └── index.html
+    ├── icons (directory of SVGs)
+    ├── icons.css
+    └── index.html (demo)
 ```
 
 ### 4. Preview the results:
 
-Upon completion, the script will output a direct link to the `embedded-icons/index.html` page (e.g., `file:///path/to/your/my-icons/css/embedded-icons/index.html`). In most modern terminals, you can Command-click (macOS) or Control-click (Windows/Linux) this link to open it directly in your default web browser. This version works locally without a server because the SVG data is embedded within the CSS.
+Upon completion, the script will output a direct link to the `embedded-icons/index.html` page. In most modern terminals, you can Command-click (macOS) or Control-click (Windows/Linux) this link to open it directly in your default web browser. This version works locally without a server because the SVG data is embedded within the CSS. Viewing the referenced icons requires a server.
 
 The demo pages include interactive features like search and copy-to-clipboard functionality.
 
-**Important for File-Referenced Icons:**
 
-*   Viewing the `referenced-icons/index.html` page **requires a local web server**. Browsers restrict `file:///` pages from loading local file resources (like SVGs) for security reasons. See the FAQ section "Why do I need a server for file-referenced icons, and what about CORS?" for simple commands to start a local server.
-*   If you host the generated SVG files on a different domain than your HTML pages in a production environment, the server hosting the SVG files **must** be configured to send appropriate CORS (Cross-Origin Resource Sharing) headers (e.g., `Access-Control-Allow-Origin: *` or your specific HTML domain). See the FAQ for more details on CORS.
 
 ### 5. Use the icons in your HTML:
 
 ```html
 <!-- Include the CSS file -->
-<link rel="stylesheet" href="my-icons/embedded-icons/icons.css">
+<link rel="stylesheet" href="dist/my-icons/embedded-icons/icons.css">
 
 <!-- Use the icons -->
 <span class="home-icon"></span>
@@ -95,9 +93,65 @@ Use `font-size` and `color`, as for text styling.
 }
 ```
 
+## CLI Options
+
+### Basic Usage
+```bash
+svgs-to-icons <input-directory> [options]
+```
+
+### Available Options
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `--output <dir>` | Parent directory for output files | `--output ./dist` |
+| `--prefix <string>` | Prefix for CSS class names | `--prefix ui` |
+| `--postfix <string>` | Postfix for CSS class names | `--postfix btn` |
+| `--embedded` | Generate embedded icons (data URIs) | `--embedded` |
+| `--referenced` | Generate referenced icons (file paths) | `--referenced` |
+| `--demo` | Generate interactive demo HTML files | `--demo` |
+
+### Prefix and Postfix Details
+
+**Automatic Hyphen Handling:**
+- **Prefix:** If your prefix doesn't end with a hyphen, one is automatically added
+  - `--prefix ui` becomes `ui-` → `.ui-home-icon`
+  - `--prefix nav-` stays `nav-` → `.nav-home-icon`
+  
+- **Postfix:** If your postfix doesn't start with a hyphen, one is automatically added
+  - `--postfix btn` becomes `-btn` → `.home-btn`
+  - `--postfix -icon` stays `-icon` → `.home-icon`
+
+**Examples:**
+```bash
+# Creates classes like .ui-home-btn
+svgs-to-icons ./icons --prefix ui --postfix btn
+
+# Creates classes like .nav-home-icon  
+svgs-to-icons ./icons --prefix nav- --postfix -icon
+
+# Creates classes like .btn-home
+svgs-to-icons ./icons --prefix btn --postfix ""
+```
+
+### Output Control
+
+By default, `svgs-to-icons` generates both embedded and referenced versions with demo files. You can control this:
+
+```bash
+# Generate only embedded icons
+svgs-to-icons ./icons --embedded
+
+# Generate only referenced icons  
+svgs-to-icons ./icons --referenced
+
+# Skip demo files
+svgs-to-icons ./icons --demo false
+```
+
 ## FAQ
 
-### Quick Navigation
+### Quick Links
 - [What's the difference between embedded and file-referenced CSS?](#whats-the-difference-between-embedded-and-file-referenced-css)
 - [Why do I need a server for file-referenced icons, and what about CORS?](#why-do-i-need-a-server-for-file-referenced-icons-and-what-about-cors)
 - [Why does svgs-to-icons use CSS masks?](#why-does-svgs-to-icons-use-css-masks)
@@ -110,7 +164,7 @@ Use `font-size` and `color`, as for text styling.
 
 ### What’s the difference between embedded and file-referenced CSS?
 
-svgs-to-icons generates both:
+`svgs-to-icons` generates both:
 
 - **Embedded** icons are inlined into the CSS as data URIs. This makes your CSS self-contained and avoids HTTP requests — ideal for a small set of icons that are always needed. You can preview this version directly in a browser from your local file system.
 - **File-referenced** icons are linked by `url(\"...\")` in CSS. This keeps your CSS smaller and lets browsers cache the icons separately. It’s better for larger sets or when icons are reused across pages. **Note:** To preview this version locally, you'll need to use a simple HTTP server. If hosting SVGs on a different domain than your HTML, ensure proper CORS configuration on the SVG server (see FAQ below).
@@ -122,28 +176,16 @@ Both versions use the same class names and styling conventions.
 **Local Preview:**
 When you open an HTML file directly from your local file system (using a `file:///` path), browsers impose strict security restrictions. These prevent the HTML page from loading other local files, such as the individual SVG files linked by the `referenced-icons` CSS.
 
-To preview the `referenced-icons/index.html` page correctly, you need to serve its directory using a simple local HTTP server. Since `svgs-to-icons` is a Node.js script and its setup involves `npm install`, you likely have `npx` (which comes with npm) available.
-
-Open your terminal or command prompt, navigate to the output directory where the `index.html` for the referenced icons is located (e.g., `cd ./my-icons/css/referenced-icons/`), and run the following command:
+Most computers have built-in software to launch a web server. Open your terminal or command prompt, navigate to the output directory where the `index.html` for the referenced icons is located (e.g., `cd ./dist/my-icons/referenced-icons/`), and run the following command:
 
 *   **Recommended (Node.js/npm/npx):**
     ```bash
     npx serve .
     ```
     This will download `serve` if not already present and start a server. It usually serves on `http://localhost:3000` or `http://localhost:5000`. Check the terminal output for the exact address (e.g., `http://localhost:3000/index.html`) and open it in your browser.
-    If `serve` is not found or you encounter issues, you might need to install it globally first (`npm install -g serve`) and then run `serve .`, or ensure your `npm` version is 5.2.0+ for `npx` to work as expected.
-
-*   **Alternative Methods (if `npx serve .` is not preferred or encounters issues):**
-    *   **Using Python (often pre-installed on macOS/Linux):**
-        *   Python 3: `python3 -m http.server`
-        *   Python 2: `python -m SimpleHTTPServer`
-        (Both usually serve on `http://localhost:8000`. Open `http://localhost:8000/index.html`)
-    *   **Using PHP (often pre-installed on macOS/Linux):**
-        `php -S localhost:8000`
-        (Serves on `http://localhost:8000`. Open `http://localhost:8000/index.html`)
 
 *   **Using VS Code Live Server Extension:**
-    If you're using Visual Studio Code, the "Live Server" extension is a convenient option. Right-click the `index.html` file in the Explorer and choose "Open with Live Server."
+    If you're using Visual Studio Code, the “Live Server” extension is a convenient option. Right-click the `index.html` file in the Explorer and choose "Open with Live Server."
 
 Once the server is running, open your web browser and navigate to the address provided by the server (e.g., `http://localhost:3000/index.html` or `http://localhost:8000/index.html`).
 
@@ -157,7 +199,7 @@ To enable this, the server hosting the SVG files must include the `Access-Contro
 OR
 `Access-Control-Allow-Origin: *` (to allow any website, use with caution)
 
-Without the correct CORS headers, browsers will block the requests for cross-origin SVGs, and your file-referenced icons will not appear. The embedded icons version does not have this issue as the SVGs are part of the CSS itself.
+Without the correct CORS headers, browsers will block the requests for cross-origin SVGs, and your file-referenced icons will not appear. The embedded icons version does not have this issue as the SVGs are incorporated into the CSS as data URIs.
 
 ### Why does svgs-to-icons use CSS masks?
 
@@ -169,7 +211,7 @@ Without the correct CORS headers, browsers will block the requests for cross-ori
 
 ### How are the icons optimized?
 
-svgs-to-icons uses [`svgo`](https://github.com/svg/svgo) to:
+`svgs-to-icons` uses [`svgo`](https://github.com/svg/svgo) to:
 - Remove metadata
 - Minimize path and group complexity
 - Strip unnecessary attributes
@@ -178,10 +220,11 @@ For embedded icons, we additionally minify them into `data:` URIs using [`mini-s
 
 ### Why do you rename the icons?
 
-Icon file names often contain characters that don’t work well in CSS class names. svgs-to-icons:
-- Converts names to lowercase `kebab-case`
-- Adds a consistent prefix (e.g. `lt5-`)
-- Ensures valid, predictable class names like `.lt5-search-icon`
+Icon file names often contain characters that don’t work well in CSS class names. `svgs-to-icons`:
+- Converts names to lowercase and replaces invalid characters with hyphens
+- Removes special characters and normalizes spacing
+- Prefixes numeric filenames with "i" (e.g., `123.svg` → `.i123-icon`)
+- Ensures valid, predictable class names
 
 ### Can I use `<i>` tags for icons?
 
@@ -189,19 +232,11 @@ You could, but you shouldn’t. `<i>` is a semantic tag for italics, and using i
 
 ### Do these icons support color?
 
-Yes, they are fully **colorizable** using `currentColor`. You can set `color` on the icon or a parent element and it will apply to the icon mask via `background-color`.
-
-```css
-.settings-icon {
-  color: red;
-}
-```
-
-What these icons **do not support** is multiple colors within the same shape. They’re single-shape, single-color icons — just like icon fonts.
+They are fully **colorizable** using `color` on the icon or a parent element. These icons **do not support** multiple colors within the same shape. They’re single-shape, single-color icons — just like icon fonts.
 
 ### Can I use this for emojis?
 
-No. Emojis are typically multicolor glyphs handled by the browser and operating system, not by SVG. They’re not well-suited to this kind of masking system.
+Probably not. Emojis are typically multicolor glyphs handled by the browser and operating system, not by SVG. They’re not well-suited to this kind of masking system.
 
 If you need accessible emoji-style icons, consider using:
 - [Twemoji](https://twemoji.twitter.com/)
@@ -217,35 +252,60 @@ If you need accessible emoji-style icons, consider using:
 - **Better performance** — no component overhead or runtime SVG injection
 - **Framework agnostic** — works with any HTML/CSS setup
 
-Component libraries are certainly convenient though, especially when built into UI frameworks like shadcn, Vuetify, Material Design, etc. They’re ideal if you need programmatic control over icon properties or want TypeScript integration for icon imports.
+Component libraries are certainly convenient though, especially when built into UI frameworks like shadcn, Vuetify, Material Design, etc. 
 
-## Alternatives to svgs-to-icons
+### What are some alternatives to `svgs-to-icons`?
 
-Below is a quick comparison of alternative icon solutions, highlighting their strengths and trade-offs relative to svgs-to-icons.
+You have a number of options for rendering icons in HTML; each has its pros and cons. Here are a few commonly-used systems.
 
-| Solution            | Pros                               | Cons                        | Best for                            |
-|---------------------|------------------------------------|-----------------------------|-------------------------------------|
-| **FontAwesome**     | Professionally designed, framework-specific components | Subscription required, network dependency | Projects needing pre-designed icons and React/Vue components |
-| **Iconify**         | Massive collection, easy API usage, framework integration | Runtime JS dependency, limited custom SVG handling | Projects needing diverse icon sets |
-| **UnoCSS Icons**    | Zero runtime overhead, integrates with UnoCSS | Requires UnoCSS adoption, less flexibility | UnoCSS or atomic CSS-based projects |
-| **Icônes**          | Visual search, easy SVG downloads  | Limited to Iconify’s collection | Sourcing quality SVGs quickly |
-| **IcoMoon**         | GUI-based font generation          | Accessibility issues, manual workflow | Font-based icon systems with GUI control |
-| **Font Design Tools**| Complete customization            | Complex, steep learning curve, accessibility concerns | Advanced typography projects |
+### FontAwesome
+[FontAwesome](https://fontawesome.com/) arguably started a revolution in 2012 by making large sets of professionally designed icons available on the web through a single font file. Its early approach — rendering icons via font glyphs — allowed developers to scale and style icons using familiar CSS properties like `font-size` and `color`. In more recent versions, FontAwesome has transitioned to an SVG-based model, offering component libraries for Vue, React, and Angular, as well as a script-based solution for injecting icons at runtime.
+FontAwesome’s tools are reliable and well-integrated with modern JavaScript frameworks, but they work exclusively with the FontAwesome icon sets. Custom icons can be added, but only by converting them into a proprietary format and manually registering them. Compared to `svgs-to-icons`, FontAwesome is more powerful in dynamic app settings but far less flexible for quickly converting and using arbitrary SVGs — especially in CSS-only or HTML-first workflows.
+—
+### Iconify
+[Iconify](https://iconify.design/) offers access to over 200,000 icons across a wide variety of public icon sets, many of them from commonly-used design systems. It supports multiple rendering strategies: icons can be injected into the DOM via framework components (Vue, React), rendered via a custom web component, inlined at build time using Vite or Webpack plugins, even simply cut-and-pasted as CSS from their site. This versatility allows developers to choose between runtime flexibility and build-time performance.
+Iconify also supports custom icon sets, but doing so typically requires adopting their internal JSON format or configuring file system loaders for build-time integration. In comparison, `svgs-to-icons` handles custom icons much more directly — just point it at a folder of SVGs and it generates optimized CSS with no configuration. Where Iconify excels is in scale and dynamic integration; where it falls short is in simplicity and plug-and-play support for custom assets.
+—
+### UnoCSS Icons
+Anthony Fu’s [UnoCSS](https://unocss.dev/) is an engine for CSS utillities — it’s similar to Bootstrap, Tailwind and other CSS frameworks, but it can allow you to mix and match from different frameworks, compiling only the CSS you need at build time. UnoCSS Icons is a plugin that allows you to use icons as utility classes — for example, `i-mdi-home` — and inlines their SVGs using `mask-image`, much like `svgs-to-icons`. Through standard naming conventions, it provides easy acccess to the entire Iconify library.
+Both UnoCSS Icons and `svgs-to-icons` generate CSS-based icon styles with no runtime JavaScript and support styling via `color` and `font-size`. Where they differ is in setup and scope: UnoCSS is a CSS framework with a build routine that runs whenever you change your CSS; `svgs-to-icons` works independently of any CSS methodology and only needs to generate icon assets when your icon SVGs change. Additionally, while UnoCSS supports custom icons via configuration, `svgs-to-icons` requires no plugin setup or registration — it simply processes any folder of SVGs directly.
+—
+### IcoMoon
+[IcoMoon](https://icomoon.io/) is a GUI-based online tool for creating custom icon fonts or SVG sprite sheets. It allows users to upload SVGs, combine them into a set, and export them as web fonts or inline SVG bundles. IcoMoon was a common choice in the era of icon fonts and still appeals to teams that want GUI control over their icon workflow.
+Compared to `svgs-to-icons`, IcoMoon requires more manual work and produces outputs — like icon fonts — that are generally considered less accessible and more difficult to style than mask-based SVGs. It does, however, offer a visual way to manage icon collections, which some designers and front-end developers still prefer.
+—
+### Font Design Tools
+Tools ([Glyphs](https://glyphsapp.com/), [FontForge](https://fontforge.org/en-US/), [FontLab](https://www.fontlab.com/)) are professional font editors used to create traditional font files, including custom icon fonts. These are powerful tools, often used by type designers or branding teams to produce multi-purpose fonts that include both textual glyphs and iconography.
+These tools operate at a different level of abstraction than `svgs-to-icons`. Rather than generating CSS classes or optimizing SVG files, they produce binary font files (`.woff`, `.ttf`) and require considerable expertise to use effectively. They’re appropriate for highly customized font workflows or typographic branding projects, but they’re not a practical option for everyday web icon usage.
 
-### Why Choose svgs-to-icons?
-- **No JavaScript:** Icons integrate directly via CSS, ensuring excellent performance and no runtime overhead.
-- **Local and Customizable:** Fully control your icons and workflow; ideal for bespoke or company-branded icon sets.
-- **Minimal Dependencies:** Lightweight build-time processing, easy to integrate into any web workflow without extensive setup or subscription services.
+## Customization
 
+### Demo Color Palette
+
+The interactive demo pages use a customizable color system defined in `templates/colors.js`. This provides the color options in the "Icon Color" and "Background Color" dropdowns.
+
+**Default colors include:**
+- Base colors: Blue, Green, Red, Yellow, Orange, Purple, Teal
+- Each color family has lighten/darken variants (e.g., `blue-lighten-10`, `blue-darken-20`)
+- Extended grayscale options
+- Common colors: Black, White, Transparent
+
+**To customize the color palette:**
+1. Edit `templates/colors.js`
+2. Follow the existing data format:
+   ```javascript
+   'color-name': { value: '#HEX-CODE', name: 'Display Name' }
+   ```
+3. Regenerate your icons to see the new colors in demo pages
+
+The color system is well-documented within the file itself, including structure guidelines and usage examples.
 
 ## Technical Details
 
 ### Generated CSS Structure
 
-svgs-to-icons generates CSS classes using CSS mask properties for maximum compatibility:
-
 ```css
-.icon-filename {
+.filename-icon {
     display: inline-block;
     width: 1em;
     height: 1em;
@@ -255,6 +315,33 @@ svgs-to-icons generates CSS classes using CSS mask properties for maximum compat
 }
 ```
 Note that the 1em `width` and `height` will correspond to the font size, so when `font-size: 20px`, the icon will be rendered in a 20px block. Because icons are often interspersed with text, we’ve chosen `display: inline-block` though other display types are possible, so long as they can be sized with `width` and `height`. Similarly, it’s possible to change or override `background-color: currentColor`, which is present here because it allows the icon to be colorized using `color`.
+
+### CSS Class Name Collisions
+Different SVG filenames may generate identical base class names after sanitization. For example, `Home.svg`, `HOME.svg`, and `home@.svg` all become `home` after processing.
+
+**Automatic collision handling:** `svgs-to-icons` automatically resolves collisions by adding numeric suffixes to the base name (shown here with default `-icon` postfix):
+- First occurrence: `home` → `.home-icon`
+- Second occurrence: `home-1` → `.home-1-icon` 
+- Third occurrence: `home-2` → `.home-2-icon`
+
+**Special case:** Files with names that result in empty or invalid class names (like `.svg`, `@.svg`, `!#$.svg`) become `unnamed`, `unnamed-1`, `unnamed-2`, etc. (before prefix/postfix are applied).
+
+**Best practices** (to avoid numbered suffixes):
+- Use consistent, unique filenames 
+- Avoid special characters, spaces, and mixed case in filenames
+- Consider using descriptive prefixes (e.g., `ui-home.svg`, `nav-home.svg`)
+- Ensure filenames contain at least one alphanumeric character
+
+**Case-Sensitive Filesystems:**
+On case-sensitive filesystems (Linux, some macOS configurations), files like `Home.svg` and `home.svg` can coexist but will generate the same CSS class name. This can lead to unexpected behavior when moving projects between different operating systems. Use consistent lowercase naming to avoid these issues.
+
+### Prefixes and Postfixes
+
+The generated CSS uses wildcard selectors to apply base styles to all icons. If you use custom prefixes or postfixes, be aware that existing CSS classes in your project might unintentionally match the wildcard pattern.
+
+For example, with the default `-icon` postfix, the CSS includes `[class*="-icon"]` which will match any class containing "-icon" anywhere in the name, including classes like `.navigation-icon-wrapper` or `.my-section-icon-container`.
+
+To avoid conflicts, choose distinctive prefixes and postfixes that are unlikely to appear in your existing class names, such as `--prefix "svg-"` or `--postfix "-svg"`.
 
 ### Dependencies
 
@@ -266,21 +353,30 @@ Note that the 1em `width` and `height` will correspond to the font size, so when
 ### Browser Compatibility
 
 **Icon CSS Files (CSS Masking):**
-The generated icon CSS relies on the standard, unprefixed `mask-image` property to display icons. This is well-supported in modern browsers (Chrome, Firefox, Edge, and Safari version 11+ from approximately 2017 onwards). Icons will not render correctly in browsers that require the older `-webkit-mask-image` prefix (like Safari pre-version 11 or older Chrome versions) or in Internet Explorer, which does not support CSS masking at all. You can easily add support for earlier browsers by modifying `demo-template.js`, but there may be a significant increase in the size of the icons.
+The generated icon CSS relies on the standard, unprefixed `mask-image` property to display icons. This is well-supported in modern browsers (Chrome, Firefox, Edge, and Safari version 11+ from approximately 2017 onwards). Icons will not render correctly in browsers that require the older `-webkit-mask-image` prefix (like Safari pre-version 11 or older Chrome versions) or in Internet Explorer, which does not support CSS masking at all.
 
-**Demo Page (Clipboard API):**
-The "copy class name" feature in the demo pages uses the `navigator.clipboard.writeText` API, which is supported in most modern browsers (Chrome ~66+, Firefox ~63+, Safari ~13.1+; generally from 2018-2020 onwards) and requires a secure context (HTTPS or localhost). This feature is for demo convenience only and does not affect the functionality of the generated icon CSS in your projects. Internet Explorer does not support this API.
+If you need to support very old Safari versions, you can manually modify the generated CSS to use CSS custom properties with `-webkit-` prefixes:
 
-### Limitations and Known Issues
+```css
+.filename-icon {
+    --svg: url("data:image/svg+xml;charset=utf-8,<optimized-svg>");
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+```
 
-**CSS Class Name Collisions:**
-Different SVG filenames may generate identical CSS class names after sanitization. For example, `Home.svg`, `HOME.svg`, `home@2x.svg`, and `ho--me.svg` all become `.home-icon`. When collisions occur, later files silently overwrite earlier ones in the generated CSS. To avoid this:
-- Use consistent, unique filenames 
-- Avoid special characters, spaces, and mixed case in filenames
-- Consider using descriptive prefixes (e.g., `ui-home.svg`, `nav-home.svg`)
+This approach provides maximum compatibility while keeping the data URI in a reusable CSS custom property.
 
-**Case-Sensitive Filesystems:**
-On case-sensitive filesystems (Linux, some macOS configurations), files like `Home.svg` and `home.svg` can coexist but will generate the same CSS class name. This can lead to unexpected behavior when moving projects between different operating systems. Use consistent lowercase naming to avoid these issues.
+**Demo Pages:**
+The interactive demo pages use modern CSS features including CSS Nesting and the Clipboard API, requiring recent browsers (Chrome 112+, Firefox 117+, Safari 16.5+; generally from 2023 onwards). These demos are for development convenience only and do not affect the functionality of the generated icon CSS in your projects.
 
 ## Contributing
 

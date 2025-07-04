@@ -17,7 +17,7 @@ const DEFAULT_CONFIG = {
 	input: null, // Input directory (required)
 	output: null, // Output directory (will default to dist/<input-directory-name>)
 	prefix: "", // Prefix for CSS class names (e.g., 'ui-' -> 'ui-home-icon')
-	postfix: "-icon", // Postfix for CSS class names (e.g., '-btn' -> 'home-btn')
+	postfix: "-icon", // Postfix for CSS class names (e.g., '-svg' -> 'home-svg')
 	embedded: true, // Generate embedded version (data URIs)
 	referenced: true, // Generate referenced version (file paths)
 	demo: true, // Generate interactive demo HTML files

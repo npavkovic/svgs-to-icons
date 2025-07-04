@@ -17,7 +17,10 @@
     "cli",
     "icon-system",
     "css-masks",
-    "svg-optimization"
+    "svg-optimization",
+    "frontend",
+    "build-tool",
+    "web-development"
   ],
   "author": "Nicholas Pavkovic",
   "license": "ISC",
@@ -30,7 +33,7 @@
     "url": "https://github.com/npavkovic/svgs-to-icons/issues"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "commander": "^14.0.0",

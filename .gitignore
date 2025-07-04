@@ -1,20 +1,24 @@
 
+# Dependencies
 node_modules/
 .npm
-.stylelintcache
 
+# Environment files
 .env
 .env.development.local
 .env.test.local
 .env.production.local
 .env.local
 
-dist
-custom-output
+# Output directories
+dist/
+custom-output/
 
+# OS files
 .DS_Store
 
-node_modules
+# Cache files
+.stylelintcache
 
-.github
+# IDE/Editor files
 .claude

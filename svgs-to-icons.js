@@ -92,6 +92,9 @@ async function main() {
 		const fileConfig = loadConfigFile();
 
 		// 3. Merge configurations: defaults → file → CLI
+		// Remove undefined values from both configurations first so that they don't override legit values
+		Object.keys(fileConfig).forEach(key => fileConfig[key] === undefined && delete fileConfig[key]);
+  		Object.keys(cliConfig).forEach(key => cliConfig[key] === undefined && delete cliConfig[key]);
 		const mergedConfig = {
 			...DEFAULT_CONFIG,
 			...fileConfig,

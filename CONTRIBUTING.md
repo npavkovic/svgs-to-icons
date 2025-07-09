@@ -1,6 +1,6 @@
 # Contributing to svgs-to-icons
 
-Thank you for your interest in contributing to svgs-to-icons! This guide will help you get started.
+Thank you for your interest in contributing to `svgs-to-icons`! This guide will help you get started.
 
 ## Getting Started
 
@@ -15,7 +15,7 @@ Thank you for your interest in contributing to svgs-to-icons! This guide will he
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/svgs-to-icons.git
+   git clone https://github.com/npavkovic/svgs-to-icons.git
    cd svgs-to-icons
    ```
 3. **Install dependencies:**

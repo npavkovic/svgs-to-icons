@@ -131,12 +131,12 @@ class SvgIconProcessor {
 	}
 
 	async getSvgFiles() {
-		// Returns an array of SVG file paths from the input directory
+		// Builds an array of SVG file paths from the input directory
 		const files = await fs.promises.readdir(this.config.input);
 		const svgFiles = files
 			.filter((file) => path.extname(file).toLowerCase() === ".svg")
 			.map((file) => path.join(this.config.input, file));
-		if (files.length === 0) {
+		if (svgFiles.length === 0) {
 			throw new Error("No SVG files found in the input directory.");
 		} else this.iconBuild.svgFiles = svgFiles;
 	}
@@ -152,15 +152,7 @@ class SvgIconProcessor {
 		// Base CSS styles that all icons need
 		// This includes the essential mask properties, sizing, and display behavior
 
-		const baseIconStyles = `${iconSelector} {
-	mask-size: 100% 100%;
-	background-color: currentColor;
-	mask-repeat: no-repeat;
-	mask-position: center;
-	height: 1em;
-	width: 1em;
-	display: inline-block;
-}`;
+		const baseIconStyles = `${iconSelector} { mask-size: 100% 100%; background-color: currentColor; mask-repeat: no-repeat; mask-position: center; height: 1em; width: 1em; display: inline-block;}`;
 
 		// WEBKIT PREFIX MODIFICATION: For older Safari support (Safari 10.1-13.x),
 		// modify the baseIconStyles to include webkit prefixes:
@@ -185,7 +177,9 @@ class SvgIconProcessor {
 		// Filter and process SVG files
 		for (const filePath of this.iconBuild.svgFiles) {
 			const svgContent = await fs.promises.readFile(filePath, "utf8");
-			const fileName = path.basename(filePath); // Get the filename (e.g., "home.svg")
+			const originalFilename = path.basename(filePath); // Get the filename (e.g., "home.svg")
+			const baseName = this.createSafeCssClassName(originalFilename); // Create a safe CSS class name
+			const processedFilename = `${baseName}.svg`; // Full name with extension for saving
 
 			let optimizedSvg;
 			try {
@@ -207,7 +201,7 @@ class SvgIconProcessor {
 				}).data;
 			} catch (error) {
 				this.iconBuild.warnings.push(
-					`Skipping ${fileName}. SVG optimization failed: ${error.message}`
+					`Skipping ${originalFilename}. SVG optimization failed: ${error.message}`
 				);
 				continue;
 			}
@@ -218,7 +212,7 @@ class SvgIconProcessor {
 				!optimizedSvg.includes("<svg")
 			) {
 				this.iconBuild.warnings.push(
-					`Skipping ${fileName}: malformed or empty SVG.`
+					`Skipping ${originalFilename}: malformed or empty SVG.`
 				);
 				continue;
 			}
@@ -228,23 +222,20 @@ class SvgIconProcessor {
 			const svgDataUri = minifySvgDataURI(optimizedSvg);
 
 			if (!svgDataUri.startsWith("data:image/svg+xml,")) {
-				this.iconBuild.warnings.push(`Invalid SVG data URI for ${fileName}`);
+				this.iconBuild.warnings.push(`Invalid SVG data URI for ${originalFilename}`);
 				continue;
 			}
 
 			// Generate CSS class name and human-readable display name
-			const cssClassName =
-				this.config.prefix +
-				this.createSafeCssClassName(fileName) +
-				this.config.postfix;
+			const cssClassName = `${this.config.prefix}${baseName}${this.config.postfix}`; // e.g., "ui-home-icon" or "home-icon"
 
 			// Create icon metadata object
 			// This contains all the information needed for templates and CSS generation
 
 			this.iconBuild.processedIcons.push({
 				className: cssClassName, // CSS class name (e.g., "home-icon")
-				displayName: this.createDisplayName(fileName), // Human readable name (e.g., "Home")
-				fileName, // Original filename (e.g., "home.svg")
+				displayName: this.createDisplayName(baseName), // Human readable name (e.g., "Home")
+				processedFilename, // Filename
 			});
 
 			// Generate CSS rules for both embedded and referenced versions
@@ -252,7 +243,7 @@ class SvgIconProcessor {
 			const embeddedCssRule = `.${cssClassName} { mask-image: url("${svgDataUri}"); }`;
 
 			// Referenced version uses file paths (smaller CSS, requires SVG files)
-			const referencedCssRule = `.${cssClassName} { mask-image: url("./icons/${fileName}"); }`;
+			const referencedCssRule = `.${cssClassName} { mask-image: url("./icons/${processedFilename}"); }`;
 
 			// WEBKIT PREFIX MODIFICATION: For older Safari support (Safari 10.1-13.x),
 			// replace the above two CSS rule definitions with webkit-prefixed versions
@@ -269,20 +260,22 @@ class SvgIconProcessor {
 
 			// Write the SVG file to the referenced icons directory
 			await fs.promises.writeFile(
-				path.join(this.iconBuild.directories.svgDestination, fileName),
+				path.join(this.iconBuild.directories.svgDestination, processedFilename),
 				optimizedSvg
 			);
 		}
 
 		// Write the CSS files for embedded and referenced versions
-		await fs.promises.writeFile(
-			path.join(this.iconBuild.directories.embeddedIcons, "icons.css"),
-			baseIconStyles + this.iconBuild.embeddedCssRules
-		);
-		await fs.promises.writeFile(
-			path.join(this.iconBuild.directories.referencedIcons, "icons.css"),
-			baseIconStyles + this.iconBuild.referencedCssRules
-		);
+		await Promise.all([
+			fs.promises.writeFile(
+				path.join(this.iconBuild.directories.embeddedIcons, "icons.css"),
+				baseIconStyles + this.iconBuild.embeddedCssRules
+			),
+			fs.promises.writeFile(
+				path.join(this.iconBuild.directories.referencedIcons, "icons.css"),
+				baseIconStyles + this.iconBuild.referencedCssRules
+			)
+		]);
 	}
 
 	async generateDemos() {

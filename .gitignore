@@ -12,7 +12,6 @@ node_modules/
 
 # Output directories
 dist/
-custom-output/
 
 # OS files
 .DS_Store

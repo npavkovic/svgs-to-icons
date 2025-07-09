@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2025-01-09
+
+### Fixed
+- Fixed README.md formatting errors and inconsistencies
+- Corrected FAQ section numbering and links
+- Fixed typos in documentation (frameworks, access, etc.)
+- Updated screenshot reference in README
+
 ## [0.1.2] - 2025-01-09
 
 ### Fixed

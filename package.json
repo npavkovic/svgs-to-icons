@@ -1,6 +1,6 @@
 {
   "name": "svgs-to-icons",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Convert SVG files to CSS classes with mask properties",
   "main": "svgs-to-icons.js",
   "bin": {

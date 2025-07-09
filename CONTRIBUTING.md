@@ -1,6 +1,6 @@
-# Contributing to svgs-to-icons
+# Contributing to `svgs-to-icons`
 
-Thank you for your interest in contributing to svgs-to-icons! This guide will help you get started.
+Thank you for your interest in contributing to `svgs-to-icons`! This guide will help you get started.
 
 ## Getting Started
 
@@ -92,11 +92,10 @@ Examples:
 ### 🧪 Code Contributions
 
 **Areas where help is welcome:**
-- Additional output formats (e.g., SCSS, CSS modules)
 - Performance optimizations
 - Better error handling and validation
 - Cross-platform compatibility improvements
-- Additional CLI options
+- Demo template enhancements
 
 ## Code Standards
 

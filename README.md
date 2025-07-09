@@ -6,7 +6,7 @@
 
 **A command-line tool that converts SVG files into easy-to-use CSS icon classes.**
 
-![Screenshot of svgs-to-icons demo](svgs-to-icons.png)
+![Screenshot of svgs-to-icons demo](svgs-to-icons-screenshot.png)
 
 ```bash
 # Quick start

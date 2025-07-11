@@ -56,12 +56,12 @@ function generateDemo({ title, embedded, iconBuild, sourceDirectory }) {
 			--border-primary: #D1D1D1;
 			--button-on-surface-hover: #000;
 			--button-on-surface: #444;
-			--button-surface-hover:rgb(204, 204, 204);
+			--button-surface-hover: #CCCCCC;
 			--button-surface:#e6e6e6;
-			--focused-outline:rgb(102, 116, 169);
+			--focused-outline: #6674A9;
 			--on-surface-primary: #000;
 			--on-surface-secondary: #454545;
-			--surface-primary: hsl(0, 0%, 95%);
+			--surface-primary: #F2F2F2;
 			--surface-secondary: #FFF;
 			--theme-selected-color: #22c55e;
 		}
@@ -72,10 +72,10 @@ function generateDemo({ title, embedded, iconBuild, sourceDirectory }) {
 			--button-on-surface: #AAA;
 			--button-surface-hover: #444;
 			--button-surface: #333;
-			--focused-outline:rgb(124, 141, 199);
+			--focused-outline: #7C8DC7;
 			--on-surface-primary: #FFF;
 			--on-surface-secondary: #CCC;
-			--surface-primary: hsl(0, 0%, 10%);
+			--surface-primary: #1A1A1A;
 			--surface-secondary: #000;
 		}
 		

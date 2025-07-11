@@ -56,7 +56,7 @@ function generateDemo({ title, embedded, iconBuild, sourceDirectory }) {
 			--border-primary: #D1D1D1;
 			--button-on-surface-hover: #000;
 			--button-on-surface: #444;
-			--button-surface-hover: #CCCCCC;
+			--button-surface-hover: #cccccc;
 			--button-surface: #e6e6e6;
 			--focused-outline: #6674A9;
 			--on-surface-primary: #000;
